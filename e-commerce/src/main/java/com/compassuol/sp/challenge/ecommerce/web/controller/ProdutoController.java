@@ -1,6 +1,5 @@
 package com.compassuol.sp.challenge.ecommerce.web.controller;
 
-
 import com.compassuol.sp.challenge.ecommerce.domain.produto.entity.Produto;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.service.ProdutoService;
 import com.compassuol.sp.challenge.ecommerce.web.dto.ProdutoCreateDto;
@@ -17,14 +16,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "Produtos", description = "Contém todas as opereções relativas ao recurso de um produto")
+@Tag(name = "Produtos", description = "Contém todas as operações relativas ao recurso de um produto")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/products")
 public class ProdutoController {
 
     private final ProdutoService produtoService;
-
 
     @Operation(summary = "Criar um novo produto",
             description = "Recurso para criar um novo produto no sistema. ",
@@ -37,8 +35,6 @@ public class ProdutoController {
                     @ApiResponse(responseCode = "400", description = "Recurso não processado por falta de dados ou dados inválidos",
                             content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
             })
-
-
     @PostMapping
     public ResponseEntity<Produto> criarProduto(@RequestBody ProdutoCreateDto produtoCreateDTO) {
         Produto produtoCriado = produtoService.salvar(produtoCreateDTO);
@@ -50,6 +46,4 @@ public class ProdutoController {
         Produto produto = produtoService.buscarPorId(id);
         return ResponseEntity.ok(ProdutoMapper.toDto(produto));
     }
-
-
 }
