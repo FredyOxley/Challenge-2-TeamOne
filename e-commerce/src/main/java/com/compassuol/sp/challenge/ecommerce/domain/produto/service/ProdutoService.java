@@ -2,11 +2,14 @@ package com.compassuol.sp.challenge.ecommerce.domain.produto.service;
 
 import com.compassuol.sp.challenge.ecommerce.domain.produto.entity.Produto;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.EntityNotFoundException;
+import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoProjection;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoRepository;
 import com.compassuol.sp.challenge.ecommerce.web.dto.ProdutoCreateDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,5 +34,12 @@ public class ProdutoService {
                 () -> new EntityNotFoundException(String.format("Produto com id '%s' não encontrado no sistema.", id))
         );
     }
+
+    @Transactional(readOnly = true)
+    public Page<ProdutoProjection> buscarTodos(Pageable pageable) {
+        return produtoRepository.findAllPageable(pageable);
+    }
+
+
 }
 
