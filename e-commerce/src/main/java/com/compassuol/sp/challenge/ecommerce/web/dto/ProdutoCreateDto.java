@@ -8,10 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.aspectj.weaver.ast.Not;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -31,6 +29,5 @@ public class ProdutoCreateDto {
     @NotNull
     @NotBlank
     private BigDecimal valor;
-
 
 }
