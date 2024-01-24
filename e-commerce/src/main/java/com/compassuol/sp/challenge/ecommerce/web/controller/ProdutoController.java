@@ -2,6 +2,7 @@ package com.compassuol.sp.challenge.ecommerce.web.controller;
 
 import com.compassuol.sp.challenge.ecommerce.domain.produto.entity.Produto;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoProjection;
+import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoRepository;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.service.ProdutoService;
 import com.compassuol.sp.challenge.ecommerce.web.dto.PageableDto;
 import com.compassuol.sp.challenge.ecommerce.web.dto.ProdutoCreateDto;
@@ -21,8 +22,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY;
 
@@ -31,6 +34,8 @@ import static io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY;
 @RequiredArgsConstructor
 @RequestMapping("/api/products")
 public class ProdutoController {
+
+    private final ProdutoRepository produtoRepository;
 
     private final ProdutoService produtoService;
 
@@ -57,7 +62,15 @@ public class ProdutoController {
         return ResponseEntity.ok(ProdutoMapper.toDto(produto));
     }
 
-
+    @DeleteMapping("/{id}")
+    @ResponseStatus( code = HttpStatus.NO_CONTENT)
+    public void deletarProdutoPorId(@PathVariable Long id) {
+        var produtoOptional = produtoRepository.findById(id);
+        if (produtoOptional.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        produtoRepository.delete(produtoOptional.get());
+    }
 
 
 
@@ -85,8 +98,6 @@ public class ProdutoController {
                                     schema = @Schema(implementation = PageableDto.class))
                     )
             })
-
-
     @GetMapping
     public ResponseEntity<PageableDto> getAll(@Parameter(hidden = true)
                                               @PageableDefault(size = 5, sort = {"nome"}) Pageable pageable) {
@@ -95,6 +106,11 @@ public class ProdutoController {
     }
 
 
-
-
 }
+
+
+
+
+
+
+
