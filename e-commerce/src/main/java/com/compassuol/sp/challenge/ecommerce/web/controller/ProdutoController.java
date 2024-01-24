@@ -54,6 +54,16 @@ public class ProdutoController {
         return ResponseEntity.ok(ProdutoMapper.toDto(produto));
     }
 
+    @Operation(summary = "Deletar um produto por ID" ,
+                description = "Recurso para deletar um produto do sistema por ID",
+                security = @SecurityRequirement(name = "security"),
+                responses = {
+                            @ApiResponse(responseCode = "204", description = "Produto deletado com sucesso."),
+                            @ApiResponse(responseCode = "404", description = "Produto não encontrado no sistema.",
+                                    content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
+                            @ApiResponse(responseCode = "400", description = "Recurso não processado por falta de dados ou dados inválidos.",
+                                    content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class)))
+                })
     @DeleteMapping("/{id}")
     @ResponseStatus( code = HttpStatus.NO_CONTENT)
     public void deletarProdutoPorId(@PathVariable Long id) {
@@ -63,5 +73,4 @@ public class ProdutoController {
         }
         produtoRepository.delete(produtoOptional.get());
     }
-
 }
