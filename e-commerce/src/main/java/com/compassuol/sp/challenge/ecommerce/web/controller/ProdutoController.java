@@ -1,6 +1,7 @@
 package com.compassuol.sp.challenge.ecommerce.web.controller;
 
 import com.compassuol.sp.challenge.ecommerce.domain.produto.entity.Produto;
+import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoRepository;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.service.ProdutoService;
 import com.compassuol.sp.challenge.ecommerce.web.dto.ProdutoCreateDto;
 import com.compassuol.sp.challenge.ecommerce.web.dto.ProdutoResponseDto;
@@ -13,8 +14,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @Tag(name = "Produtos", description = "Contém todas as operações relativas ao recurso de um produto")
 @RestController
@@ -23,6 +27,9 @@ import org.springframework.web.bind.annotation.*;
 public class ProdutoController {
 
     private final ProdutoService produtoService;
+
+    @Autowired
+    private final ProdutoRepository produtoRepository;
 
     @Operation(summary = "Criar um novo produto",
             description = "Recurso para criar um novo produto no sistema. ",
@@ -46,4 +53,15 @@ public class ProdutoController {
         Produto produto = produtoService.buscarPorId(id);
         return ResponseEntity.ok(ProdutoMapper.toDto(produto));
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus( code = HttpStatus.NO_CONTENT)
+    public void deletarProdutoPorId(@PathVariable Long id) {
+        var produtoOptional = produtoRepository.findById(id);
+        if (produtoOptional.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        produtoRepository.delete(produtoOptional.get());
+    }
+
 }
