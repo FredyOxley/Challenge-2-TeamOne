@@ -2,15 +2,9 @@ package com.compassuol.sp.challenge.ecommerce.domain.produto.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 
@@ -37,7 +31,11 @@ public class Produto {
     @Positive(message = "O valor deve ser um número positivo")
     private BigDecimal valor;
 
-
+    public Produto(String nome, String descricao, BigDecimal valor) {
+        this.nome = nome;
+        this.descricao = descricao;
+        this.valor = valor;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -47,6 +45,7 @@ public class Produto {
 
         return Objects.equals(id, produto.id);
     }
+
     @Override
     public int hashCode() {
         return id != null ? id.hashCode() : 0;

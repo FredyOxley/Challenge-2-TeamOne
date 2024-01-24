@@ -1,6 +1,5 @@
 package com.compassuol.sp.challenge.ecommerce.web.controller;
 
-
 import com.compassuol.sp.challenge.ecommerce.domain.produto.entity.Produto;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.service.ProdutoService;
 import com.compassuol.sp.challenge.ecommerce.web.dto.ProdutoCreateDto;
@@ -19,8 +18,6 @@ public class ProdutoController {
 
     private final ProdutoService produtoService;
 
-
-
     @PostMapping("/criar")
     public ResponseEntity<Produto> criarProduto(@RequestBody ProdutoCreateDto produtoCreateDTO) {
         Produto produtoCriado = produtoService.salvar(produtoCreateDTO);
@@ -32,7 +29,6 @@ public class ProdutoController {
         Produto produto = produtoService.buscarPorId(id);
         return ResponseEntity.ok(ProdutoMapper.toDto(produto));
     }
-
 
 
 }

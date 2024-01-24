@@ -6,6 +6,7 @@ import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoRe
 import com.compassuol.sp.challenge.ecommerce.web.dto.ProdutoCreateDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,8 @@ public class ProdutoService {
 
     private final ProdutoRepository produtoRepository;
     private final ModelMapper modelMapper;
+
+
 
 
     public Produto salvar(ProdutoCreateDto produtoCreateDTO) {
@@ -27,7 +30,6 @@ public class ProdutoService {
         return produtoRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(String.format("Produto com id '%s' não encontrado no sistema.", id))
         );
-
     }
 }
 
