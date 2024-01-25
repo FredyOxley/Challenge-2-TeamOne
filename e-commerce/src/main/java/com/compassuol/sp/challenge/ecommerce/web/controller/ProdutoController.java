@@ -9,7 +9,6 @@ import com.compassuol.sp.challenge.ecommerce.web.dto.ProdutoCreateDto;
 import com.compassuol.sp.challenge.ecommerce.web.dto.ProdutoResponseDto;
 import com.compassuol.sp.challenge.ecommerce.web.dto.exception.ErrorMessage;
 import com.compassuol.sp.challenge.ecommerce.web.dto.mapper.PageableMapper;
-import com.compassuol.sp.challenge.ecommerce.web.dto.mapper.ProdutoMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -35,9 +34,8 @@ import static io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY;
 @RequestMapping("/api/products")
 public class ProdutoController {
 
-    private final ProdutoRepository produtoRepository;
-
     private final ProdutoService produtoService;
+    private final ProdutoRepository produtoRepository;
 
     @Operation(summary = "Criar um novo produto",
             description = "Recurso para criar um novo produto no sistema. ",
@@ -56,12 +54,32 @@ public class ProdutoController {
         return ResponseEntity.ok(produtoCriado);
     }
 
+    @Operation(summary = "Localizar um produto", description = "Recurso para localizar um produto pelo ID.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Produto localizado com sucesso",
+                            content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ProdutoResponseDto.class))),
+                    @ApiResponse(responseCode = "404", description = "Produto não encontrado no sistema",
+                            content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
+                    @ApiResponse(responseCode = "400", description = "Recurso não processado por falta de dados ou dados inválidos.",
+                            content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
+            }
+    )
     @GetMapping("/{id}")
-    public ResponseEntity<ProdutoResponseDto> getById(@PathVariable Long id) {
+    public ResponseEntity<Produto> getById(@PathVariable Long id) {
         Produto produto = produtoService.buscarPorId(id);
-        return ResponseEntity.ok(ProdutoMapper.toDto(produto));
+        return ResponseEntity.ok(produto);
     }
 
+    @Operation(summary = "Deletar um produto por ID" ,
+            description = "Recurso para deletar um produto do sistema por ID",
+            security = @SecurityRequirement(name = "security"),
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "Produto deletado com sucesso."),
+                    @ApiResponse(responseCode = "404", description = "Produto não encontrado no sistema.",
+                            content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
+                    @ApiResponse(responseCode = "400", description = "Recurso não processado por falta de dados ou dados inválidos.",
+                            content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class)))
+            })
     @DeleteMapping("/{id}")
     @ResponseStatus( code = HttpStatus.NO_CONTENT)
     public void deletarProdutoPorId(@PathVariable Long id) {
@@ -71,8 +89,6 @@ public class ProdutoController {
         }
         produtoRepository.delete(produtoOptional.get());
     }
-
-
 
     @Operation(summary = "Recuperar lista de produtos",
             parameters = {
@@ -105,12 +121,4 @@ public class ProdutoController {
         return ResponseEntity.ok(PageableMapper.toDto(clientes));
     }
 
-
 }
-
-
-
-
-
-
-
