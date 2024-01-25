@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -35,9 +36,10 @@ import static io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY;
 @RequestMapping("/api/products")
 public class ProdutoController {
 
-    private final ProdutoRepository produtoRepository;
-
     private final ProdutoService produtoService;
+
+    @Autowired
+    private final ProdutoRepository produtoRepository;
 
     @Operation(summary = "Criar um novo produto",
             description = "Recurso para criar um novo produto no sistema. ",
@@ -62,6 +64,16 @@ public class ProdutoController {
         return ResponseEntity.ok(ProdutoMapper.toDto(produto));
     }
 
+    @Operation(summary = "Deletar um produto por ID" ,
+            description = "Recurso para deletar um produto do sistema por ID",
+            security = @SecurityRequirement(name = "security"),
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "Produto deletado com sucesso."),
+                    @ApiResponse(responseCode = "404", description = "Produto não encontrado no sistema.",
+                            content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
+                    @ApiResponse(responseCode = "400", description = "Recurso não processado por falta de dados ou dados inválidos.",
+                            content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class)))
+            })
     @DeleteMapping("/{id}")
     @ResponseStatus( code = HttpStatus.NO_CONTENT)
     public void deletarProdutoPorId(@PathVariable Long id) {
@@ -71,8 +83,6 @@ public class ProdutoController {
         }
         produtoRepository.delete(produtoOptional.get());
     }
-
-
 
     @Operation(summary = "Recuperar lista de produtos",
             parameters = {
@@ -105,12 +115,4 @@ public class ProdutoController {
         return ResponseEntity.ok(PageableMapper.toDto(clientes));
     }
 
-
 }
-
-
-
-
-
-
-
