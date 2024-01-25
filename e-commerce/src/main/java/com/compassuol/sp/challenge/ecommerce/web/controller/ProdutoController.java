@@ -63,7 +63,7 @@ public class ProdutoController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus( code = HttpStatus.NO_CONTENT)
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void deletarProdutoPorId(@PathVariable Long id) {
         var produtoOptional = produtoRepository.findById(id);
         if (produtoOptional.isEmpty()) {
@@ -71,8 +71,6 @@ public class ProdutoController {
         }
         produtoRepository.delete(produtoOptional.get());
     }
-
-
 
     @Operation(summary = "Recuperar lista de produtos",
             parameters = {
@@ -101,8 +99,8 @@ public class ProdutoController {
     @GetMapping
     public ResponseEntity<PageableDto> getAll(@Parameter(hidden = true)
                                               @PageableDefault(size = 5, sort = {"nome"}) Pageable pageable) {
-        Page<ProdutoProjection> clientes = produtoService.buscarTodos(pageable);
-        return ResponseEntity.ok(PageableMapper.toDto(clientes));
+        Page<ProdutoProjection> produtos = produtoService.buscarTodos(pageable);
+        return ResponseEntity.ok(PageableMapper.toDto(produtos));
     }
 
 
