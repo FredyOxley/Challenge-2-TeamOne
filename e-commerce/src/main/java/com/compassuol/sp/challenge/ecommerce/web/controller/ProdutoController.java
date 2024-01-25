@@ -121,4 +121,10 @@ public class ProdutoController {
         return ResponseEntity.ok(PageableMapper.toDto(produtos));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Produto> atualizarProduto(@PathVariable Long id ,@RequestBody ProdutoCreateDto produtoCreateDTO) {
+        Produto produto = produtoService.editarProduto(id, produtoCreateDTO);
+        return ResponseEntity.ok(produto);
+    }
+
 }
