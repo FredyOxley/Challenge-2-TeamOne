@@ -73,7 +73,7 @@ public class ApiExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
+                .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, "Parâmetros informados estão inválidos"));
     }
 
     @ExceptionHandler(Exception.class)
