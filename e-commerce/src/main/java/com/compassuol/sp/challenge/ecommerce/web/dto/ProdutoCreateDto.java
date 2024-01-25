@@ -19,7 +19,6 @@ public class ProdutoCreateDto {
 
 
     @NotBlank
-    @NotNull
     private String nome;
 
     @NotBlank
@@ -27,7 +26,6 @@ public class ProdutoCreateDto {
     private String descricao;
 
     @NotNull
-    @NotBlank
     private BigDecimal valor;
 
 }
