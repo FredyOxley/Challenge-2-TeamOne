@@ -1,6 +1,7 @@
 package com.compassuol.sp.challenge.ecommerce.web;
 
 import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.EntityNotFoundException;
+import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoRepository;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.service.ProdutoService;
 import com.compassuol.sp.challenge.ecommerce.web.controller.ProdutoController;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,9 @@ public class ProdutoControllerTest {
 
     @MockBean
     private ProdutoService produtoService;
+
+    @MockBean
+    private ProdutoRepository produtoRepository;
 
     @Test
     public void buscarProduto_PorIdExistente_RetornarProduto() throws Exception {
