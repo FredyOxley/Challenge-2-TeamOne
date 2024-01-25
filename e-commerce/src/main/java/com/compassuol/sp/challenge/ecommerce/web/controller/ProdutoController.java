@@ -81,7 +81,7 @@ public class ProdutoController {
                             content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class)))
             })
     @DeleteMapping("/{id}")
-    @ResponseStatus( code = HttpStatus.NO_CONTENT)
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void deletarProdutoPorId(@PathVariable Long id) {
         var produtoOptional = produtoRepository.findById(id);
         if (produtoOptional.isEmpty()) {
@@ -117,8 +117,8 @@ public class ProdutoController {
     @GetMapping
     public ResponseEntity<PageableDto> getAll(@Parameter(hidden = true)
                                               @PageableDefault(size = 5, sort = {"nome"}) Pageable pageable) {
-        Page<ProdutoProjection> clientes = produtoService.buscarTodos(pageable);
-        return ResponseEntity.ok(PageableMapper.toDto(clientes));
+        Page<ProdutoProjection> produtos = produtoService.buscarTodos(pageable);
+        return ResponseEntity.ok(PageableMapper.toDto(produtos));
     }
 
 }
