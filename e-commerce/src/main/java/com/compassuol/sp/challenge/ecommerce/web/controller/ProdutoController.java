@@ -5,7 +5,6 @@ import com.compassuol.sp.challenge.ecommerce.domain.produto.service.ProdutoServi
 import com.compassuol.sp.challenge.ecommerce.web.dto.ProdutoCreateDto;
 import com.compassuol.sp.challenge.ecommerce.web.dto.ProdutoResponseDto;
 import com.compassuol.sp.challenge.ecommerce.web.dto.exception.ErrorMessage;
-import com.compassuol.sp.challenge.ecommerce.web.dto.mapper.ProdutoMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -42,8 +41,8 @@ public class ProdutoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProdutoResponseDto> getById(@PathVariable Long id) {
+    public ResponseEntity<Produto> getById(@PathVariable Long id) {
         Produto produto = produtoService.buscarPorId(id);
-        return ResponseEntity.ok(ProdutoMapper.toDto(produto));
+        return ResponseEntity.ok(produto);
     }
 }
