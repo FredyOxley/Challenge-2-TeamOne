@@ -28,7 +28,6 @@ public class Produto {
     private String descricao;
 
     @Column(name = "valor", nullable = false)
-    @Positive(message = "O valor deve ser um número positivo")
     private BigDecimal valor;
 
     public Produto(String nome, String descricao, BigDecimal valor) {

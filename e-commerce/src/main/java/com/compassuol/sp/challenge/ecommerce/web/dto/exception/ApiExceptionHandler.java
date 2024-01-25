@@ -55,7 +55,7 @@ public class ApiExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
+                .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, "Parâmetros informados estão inválidos"));
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
@@ -73,7 +73,7 @@ public class ApiExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
+                .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, "Parâmetros informados estão inválidos"));
     }
 
     @ExceptionHandler(Exception.class)
@@ -82,7 +82,7 @@ public class ApiExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(new ErrorMessage(request, HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage()));
+                .body(new ErrorMessage(request, HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno no servidor"));
     }
 }
 

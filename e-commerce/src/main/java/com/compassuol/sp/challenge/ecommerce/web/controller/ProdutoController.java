@@ -9,6 +9,7 @@ import com.compassuol.sp.challenge.ecommerce.web.dto.ProdutoCreateDto;
 import com.compassuol.sp.challenge.ecommerce.web.dto.ProdutoResponseDto;
 import com.compassuol.sp.challenge.ecommerce.web.dto.exception.ErrorMessage;
 import com.compassuol.sp.challenge.ecommerce.web.dto.mapper.PageableMapper;
+import com.compassuol.sp.challenge.ecommerce.web.dto.mapper.ProdutoMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -17,6 +18,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,13 +45,13 @@ public class ProdutoController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Recurso criado com sucesso",
                             content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ProdutoResponseDto.class))),
-                    @ApiResponse(responseCode = "500", description = "Campo invalido! Descrição deve conter 10 caracteres ou mais e o nome do produto não pode ser nulo ou vazio",
+                    @ApiResponse(responseCode = "422", description = "Campo inválido! Descrição deve conter 10 caracteres ou mais, o nome do produto não pode ser nulo ou vazio e o valor não pode ser negativo",
                             content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
                     @ApiResponse(responseCode = "400", description = "Recurso não processado por falta de dados ou dados inválidos",
                             content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
             })
     @PostMapping
-    public ResponseEntity<Produto> criarProduto(@RequestBody ProdutoCreateDto produtoCreateDTO) {
+    public ResponseEntity<Produto> criarProduto(@RequestBody @Valid ProdutoCreateDto produtoCreateDTO) {
         Produto produtoCriado = produtoService.salvar(produtoCreateDTO);
         return ResponseEntity.ok(produtoCriado);
     }
@@ -119,6 +121,25 @@ public class ProdutoController {
                                               @PageableDefault(size = 5, sort = {"nome"}) Pageable pageable) {
         Page<ProdutoProjection> produtos = produtoService.buscarTodos(pageable);
         return ResponseEntity.ok(PageableMapper.toDto(produtos));
+    }
+
+    @Operation(summary = "Atualizar um produto existente",
+            description = "Recurso para atualizar as informações de um produto existente no sistema.",
+            security = @SecurityRequirement(name = "security"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Recurso criado com sucesso",
+                            content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ProdutoResponseDto.class))),
+                    @ApiResponse(responseCode = "404", description = "Produto não encontrado",
+                            content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ProdutoResponseDto.class))),
+                    @ApiResponse(responseCode = "422", description = "Campo inválido! Descrição deve conter 10 caracteres ou mais, o nome do produto não pode ser nulo ou vazio e o valor não pode ser negativo",
+                            content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
+                    @ApiResponse(responseCode = "400", description = "Requisição inválida por falta de dados ou dados inválidos",
+                            content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
+            })
+    @PutMapping("/{id}")
+    public ResponseEntity<ProdutoResponseDto> atualizarProduto(@Valid @PathVariable Long id ,@RequestBody ProdutoCreateDto produtoCreateDTO) {
+        Produto produto = produtoService.editarProduto(id, produtoCreateDTO);
+        return ResponseEntity.ok(ProdutoMapper.toDto(produto));
     }
 
 }

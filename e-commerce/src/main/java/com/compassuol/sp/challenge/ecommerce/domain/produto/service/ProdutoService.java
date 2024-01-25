@@ -36,6 +36,20 @@ public class ProdutoService {
         return produtoRepository.findAllPageable(pageable);
     }
 
+    @Transactional
+    public Produto editarProduto(Long id, ProdutoCreateDto produtoCreateDto) {
+        Produto produto = buscarPorId(id);
+        if (produto != null) {
+
+            produto.setNome(produtoCreateDto.getNome());
+            produto.setDescricao(produtoCreateDto.getDescricao());
+            produto.setValor(produtoCreateDto.getValor());
+
+            return produtoRepository.save(produto);
+        } else {
+            throw new EntityNotFoundException("Produto não encontrado com o ID: " + id);
+        }
+    }
 
 }
 
