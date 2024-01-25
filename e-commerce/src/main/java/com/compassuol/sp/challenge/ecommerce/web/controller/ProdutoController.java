@@ -44,7 +44,7 @@ public class ProdutoController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Recurso criado com sucesso",
                             content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ProdutoResponseDto.class))),
-                    @ApiResponse(responseCode = "500", description = "Campo invalido! Descrição deve conter 10 caracteres ou mais e o nome do produto não pode ser nulo ou vazio",
+                    @ApiResponse(responseCode = "422", description = "Campo inválido! Descrição deve conter 10 caracteres ou mais, o nome do produto não pode ser nulo ou vazio e o valor não pode ser negativo",
                             content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
                     @ApiResponse(responseCode = "400", description = "Recurso não processado por falta de dados ou dados inválidos",
                             content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
@@ -130,13 +130,13 @@ public class ProdutoController {
                             content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ProdutoResponseDto.class))),
                     @ApiResponse(responseCode = "404", description = "Produto não encontrado",
                             content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ProdutoResponseDto.class))),
-                    @ApiResponse(responseCode = "500", description = "Campo invalido! Descrição deve conter 10 caracteres ou mais e o nome do produto não pode ser nulo ou vazio",
+                    @ApiResponse(responseCode = "422", description = "Campo inválido! Descrição deve conter 10 caracteres ou mais, o nome do produto não pode ser nulo ou vazio e o valor não pode ser negativo",
                             content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
                     @ApiResponse(responseCode = "400", description = "Requisição inválida por falta de dados ou dados inválidos",
                             content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
             })
     @PutMapping("/{id}")
-    public ResponseEntity<Produto> atualizarProduto(@PathVariable Long id ,@RequestBody ProdutoCreateDto produtoCreateDTO) {
+    public ResponseEntity<Produto> atualizarProduto(@PathVariable Long id ,@RequestBody @Valid ProdutoCreateDto produtoCreateDTO) {
         Produto produto = produtoService.editarProduto(id, produtoCreateDTO);
         return ResponseEntity.ok(produto);
     }
