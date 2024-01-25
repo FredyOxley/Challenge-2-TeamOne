@@ -9,7 +9,6 @@ import com.compassuol.sp.challenge.ecommerce.web.dto.ProdutoCreateDto;
 import com.compassuol.sp.challenge.ecommerce.web.dto.ProdutoResponseDto;
 import com.compassuol.sp.challenge.ecommerce.web.dto.exception.ErrorMessage;
 import com.compassuol.sp.challenge.ecommerce.web.dto.mapper.PageableMapper;
-import com.compassuol.sp.challenge.ecommerce.web.dto.mapper.ProdutoMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -19,7 +18,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -37,8 +35,6 @@ import static io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY;
 public class ProdutoController {
 
     private final ProdutoService produtoService;
-
-    @Autowired
     private final ProdutoRepository produtoRepository;
 
     @Operation(summary = "Criar um novo produto",
@@ -58,6 +54,16 @@ public class ProdutoController {
         return ResponseEntity.ok(produtoCriado);
     }
 
+    @Operation(summary = "Localizar um produto", description = "Recurso para localizar um produto pelo ID.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Produto localizado com sucesso",
+                            content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ProdutoResponseDto.class))),
+                    @ApiResponse(responseCode = "404", description = "Produto não encontrado no sistema",
+                            content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
+                    @ApiResponse(responseCode = "400", description = "Recurso não processado por falta de dados ou dados inválidos.",
+                            content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
+            }
+    )
     @GetMapping("/{id}")
     public ResponseEntity<Produto> getById(@PathVariable Long id) {
         Produto produto = produtoService.buscarPorId(id);
