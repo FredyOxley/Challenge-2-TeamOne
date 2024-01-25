@@ -121,6 +121,19 @@ public class ProdutoController {
         return ResponseEntity.ok(PageableMapper.toDto(produtos));
     }
 
+    @Operation(summary = "Atualizar um produto existente",
+            description = "Recurso para atualizar as informações de um produto existente no sistema.",
+            security = @SecurityRequirement(name = "security"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Recurso criado com sucesso",
+                            content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ProdutoResponseDto.class))),
+                    @ApiResponse(responseCode = "404", description = "Produto não encontrado",
+                            content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ProdutoResponseDto.class))),
+                    @ApiResponse(responseCode = "500", description = "Campo invalido! Descrição deve conter 10 caracteres ou mais e o nome do produto não pode ser nulo ou vazio",
+                            content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
+                    @ApiResponse(responseCode = "400", description = "Requisição inválida por falta de dados ou dados inválidos",
+                            content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
+            })
     @PutMapping("/{id}")
     public ResponseEntity<Produto> atualizarProduto(@PathVariable Long id ,@RequestBody ProdutoCreateDto produtoCreateDTO) {
         Produto produto = produtoService.editarProduto(id, produtoCreateDTO);
