@@ -9,6 +9,7 @@ import com.compassuol.sp.challenge.ecommerce.web.dto.ProdutoCreateDto;
 import com.compassuol.sp.challenge.ecommerce.web.dto.ProdutoResponseDto;
 import com.compassuol.sp.challenge.ecommerce.web.dto.exception.ErrorMessage;
 import com.compassuol.sp.challenge.ecommerce.web.dto.mapper.PageableMapper;
+import com.compassuol.sp.challenge.ecommerce.web.dto.mapper.ProdutoMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -136,9 +137,9 @@ public class ProdutoController {
                             content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
             })
     @PutMapping("/{id}")
-    public ResponseEntity<Produto> atualizarProduto(@PathVariable Long id ,@RequestBody @Valid ProdutoCreateDto produtoCreateDTO) {
+    public ResponseEntity<ProdutoResponseDto> atualizarProduto(@Valid @PathVariable Long id ,@RequestBody ProdutoCreateDto produtoCreateDTO) {
         Produto produto = produtoService.editarProduto(id, produtoCreateDTO);
-        return ResponseEntity.ok(produto);
+        return ResponseEntity.ok(ProdutoMapper.toDto(produto));
     }
 
 }
