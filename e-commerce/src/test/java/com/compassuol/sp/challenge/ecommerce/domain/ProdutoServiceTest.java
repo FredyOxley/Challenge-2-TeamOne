@@ -10,6 +10,7 @@ import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.EntityNotF
 import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoRepository;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.service.ProdutoService;
 import com.compassuol.sp.challenge.ecommerce.web.dto.ProdutoCreateDto;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,6 +22,8 @@ import org.springframework.data.domain.PageImpl;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.compassuol.sp.challenge.ecommerce.common.ProdutoConstants.PRODUTO;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Optional;
 
@@ -28,6 +31,7 @@ import static com.compassuol.sp.challenge.ecommerce.common.ProdutoConstants.PROD
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -140,7 +144,6 @@ public class ProdutoServiceTest {
         when(produtoRepository.findAllPageable(any())).thenReturn(page);
 
         Page<ProdutoProjection> produtos = produtoService.buscarTodos(any());
-
         assertNotNull(produtos);
         assertEquals(produtos.getTotalElements(), 3);
     }
@@ -158,7 +161,7 @@ public class ProdutoServiceTest {
         assertEquals(produtos.getTotalElements(), 0);
     }
 
-
+    @Test
     public void buscarProduto_PorIdExistente_RetornarProduto() {
         when(produtoRepository.findById(2L)).thenReturn(Optional.of(PRODUTO2));
 
@@ -173,6 +176,19 @@ public class ProdutoServiceTest {
         doThrow(new EntityNotFoundException("")).when(produtoRepository).findById(0L);
 
         assertThatThrownBy(() -> produtoRepository.findById(0L)).isInstanceOf(EntityNotFoundException.class);
+    }
+
+    @Test
+    public void deletarProduto_PorIdExistente_NaoLancaExcecao() {
+        when(produtoRepository.findById(2L)).thenReturn(Optional.of(PRODUTO2));
+        Assertions.assertThatCode(() -> produtoService.deletarProduto(2L)).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void deletarProduto_IdInexistente_LancaExcecao() {
+        doThrow(new RuntimeException()).when(produtoRepository).findById(99L);
+
+        assertThatThrownBy(() -> produtoService.deletarProduto(99L)).isInstanceOf(RuntimeException.class);
     }
 
 }

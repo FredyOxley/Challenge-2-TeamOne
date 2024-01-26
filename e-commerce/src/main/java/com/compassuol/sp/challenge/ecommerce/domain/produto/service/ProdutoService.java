@@ -51,5 +51,11 @@ public class ProdutoService {
         }
     }
 
+    @Transactional
+    public void deletarProduto(Long id) {
+        buscarPorId(id);
+        produtoRepository.deleteById(id);
+    }
+
 }
 
