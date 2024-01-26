@@ -2,6 +2,7 @@ package com.compassuol.sp.challenge.ecommerce.domain.produto.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.math.BigDecimal;

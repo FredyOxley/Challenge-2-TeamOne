@@ -21,6 +21,7 @@ public class ProdutoCreateDto {
 
 
     @NotBlank
+    @NotNull
     private String nome;
 
     @NotBlank

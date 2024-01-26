@@ -1,6 +1,7 @@
 package com.compassuol.sp.challenge.ecommerce.web.dto.exception;
 
 import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.EntityNotFoundException;
+import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.HandlerConflictException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
@@ -93,6 +94,20 @@ public class ApiExceptionHandler {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(exception.getMessage());
     }
+
+    @ExceptionHandler(HandlerConflictException.class)
+    private ResponseEntity<ErrorMessage> HandlerConflictException(HandlerConflictException ex, HttpServletRequest request) {
+        log.error("Api Error - ", ex);
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request ,HttpStatus.CONFLICT, ex.getMessage()));
+    }
+
+
+
+
+
 }
 
 

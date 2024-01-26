@@ -43,17 +43,20 @@ public class ProdutoController {
             description = "Recurso para criar um novo produto no sistema. ",
             security = @SecurityRequirement(name = "security"),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Recurso criado com sucesso",
+                    @ApiResponse(responseCode = "201", description = "Recurso criado com sucesso",
                             content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ProdutoResponseDto.class))),
-                    @ApiResponse(responseCode = "422", description = "Campo inválido! Descrição deve conter 10 caracteres ou mais, o nome do produto não pode ser nulo ou vazio e o valor não pode ser negativo",
+                    @ApiResponse(responseCode = "500", description = "Campo invalido! Descrição deve conter 10 caracteres ou mais e o nome do produto não pode ser nulo ou vazio",
                             content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
                     @ApiResponse(responseCode = "400", description = "Recurso não processado por falta de dados ou dados inválidos",
                             content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
+                    @ApiResponse(responseCode = "409", description = "Produto já cadastrado",
+                            content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
             })
     @PostMapping
-    public ResponseEntity<Produto> criarProduto(@RequestBody @Valid ProdutoCreateDto produtoCreateDTO) {
-        Produto produtoCriado = produtoService.salvar(produtoCreateDTO);
-        return ResponseEntity.ok(produtoCriado);
+    public ResponseEntity<ProdutoResponseDto> criarProduto(@RequestBody @Valid ProdutoCreateDto produtoCreateDTO) {
+        Produto produtoCriado = ProdutoMapper.toProduto(produtoCreateDTO);
+        produtoService.salvar(produtoCriado);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ProdutoMapper.toDto(produtoCriado));
     }
 
     @Operation(summary = "Localizar um produto", description = "Recurso para localizar um produto pelo ID.",
@@ -137,5 +140,7 @@ public class ProdutoController {
         Produto produto = produtoService.editarProduto(id, produtoCreateDTO);
         return ResponseEntity.ok(ProdutoMapper.toDto(produto));
     }
+
+
 
 }

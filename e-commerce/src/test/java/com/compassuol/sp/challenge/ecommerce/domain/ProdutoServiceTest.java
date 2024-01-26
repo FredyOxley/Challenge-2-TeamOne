@@ -62,12 +62,12 @@ public class ProdutoServiceTest {
         Produto produto = ProdutoConstants.PRODUTO;
         when(produtoRepository.save(any())).thenReturn(produto);
 
-        ProdutoCreateDto produtoCreateDto = new ProdutoCreateDto("Produto 1", "Descrição do produto 1", BigDecimal.TEN);
-        produto = produtoService.salvar(produtoCreateDto);
+        Produto produtoCreate = new Produto("Produto 1", "Descrição do produto 1", BigDecimal.TEN);
+        produto = produtoService.salvar(produtoCreate);
 
-        assertEquals(produtoCreateDto.getNome(), produto.getNome());
-        assertEquals(produtoCreateDto.getDescricao(), produto.getDescricao());
-        assertEquals(produtoCreateDto.getValor(), produto.getValor());
+        assertEquals(produtoCreate.getNome(), produto.getNome());
+        assertEquals(produtoCreate.getDescricao(), produto.getDescricao());
+        assertEquals(produtoCreate.getValor(), produto.getValor());
     }
 
     @Test
@@ -75,12 +75,12 @@ public class ProdutoServiceTest {
         Produto produto = ProdutoConstants.PRODUTO;
         when(produtoRepository.save(any())).thenReturn(produto);
 
-        ProdutoCreateDto produtoCreateDto = new ProdutoCreateDto(null, "Descrição do produto 1", BigDecimal.TEN);
-        produto = produtoService.salvar(produtoCreateDto);
+        Produto produtoCreate = new Produto(null, "Descrição do produto 1", BigDecimal.TEN);
+        produto = produtoService.salvar(produtoCreate);
 
-        assertThat(produtoCreateDto.getNome()).isNull();
-        assertEquals(produtoCreateDto.getDescricao(), produto.getDescricao());
-        assertEquals(produtoCreateDto.getValor(), produto.getValor());
+        assertThat(produtoCreate.getNome()).isNull();
+        assertEquals(produtoCreate.getDescricao(), produto.getDescricao());
+        assertEquals(produtoCreate.getValor(), produto.getValor());
     }
 
     @Test
@@ -88,12 +88,12 @@ public class ProdutoServiceTest {
         Produto produto = ProdutoConstants.PRODUTO;
         when(produtoRepository.save(any())).thenReturn(produto);
 
-        ProdutoCreateDto produtoCreateDto = new ProdutoCreateDto("Produto 1", null, BigDecimal.TEN);
-        produto = produtoService.salvar(produtoCreateDto);
+        Produto produtoCreate = new Produto("Produto 1", null, BigDecimal.TEN);
+        produto = produtoService.salvar(produtoCreate);
 
-        assertEquals(produtoCreateDto.getNome(), produto.getNome());
-        assertThat(produtoCreateDto.getDescricao()).isNull();
-        assertEquals(produtoCreateDto.getValor(), produto.getValor());
+        assertEquals(produtoCreate.getNome(), produto.getNome());
+        assertThat(produtoCreate.getDescricao()).isNull();
+        assertEquals(produtoCreate.getValor(), produto.getValor());
     }
 
     @Test
@@ -101,12 +101,12 @@ public class ProdutoServiceTest {
         Produto produto = ProdutoConstants.PRODUTO;
         when(produtoRepository.save(any())).thenReturn(produto);
 
-        ProdutoCreateDto produtoCreateDto = new ProdutoCreateDto("Produto 1", "Descrição do produto 1", null);
-        produto = produtoService.salvar(produtoCreateDto);
+        Produto produtoCreate = new Produto("Produto 1", "Descrição do produto 1", null);
+        produto = produtoService.salvar(produtoCreate);
 
-        assertEquals(produtoCreateDto.getNome(), produto.getNome());
-        assertEquals(produtoCreateDto.getDescricao(), produto.getDescricao());
-        assertThat(produtoCreateDto.getValor()).isNull();
+        assertEquals(produtoCreate.getNome(), produto.getNome());
+        assertEquals(produtoCreate.getDescricao(), produto.getDescricao());
+        assertThat(produtoCreate.getValor()).isNull();
     }
 
     @Test
@@ -114,12 +114,12 @@ public class ProdutoServiceTest {
         Produto produto = ProdutoConstants.PRODUTO;
         when(produtoRepository.save(any())).thenReturn(produto);
 
-        ProdutoCreateDto produtoCreateDto = new ProdutoCreateDto("", "Descrição do produto 1", BigDecimal.TEN);
-        produto = produtoService.salvar(produtoCreateDto);
+        Produto produtoCreate = new Produto("", "Descrição do produto 1", BigDecimal.TEN);
+        produto = produtoService.salvar(produtoCreate);
 
-        assertThat(produtoCreateDto.getNome()).isBlank();
-        assertEquals(produtoCreateDto.getDescricao(), produto.getDescricao());
-        assertEquals(produtoCreateDto.getValor(), produto.getValor());
+        assertThat(produtoCreate.getNome()).isBlank();
+        assertEquals(produtoCreate.getDescricao(), produto.getDescricao());
+        assertEquals(produtoCreate.getValor(), produto.getValor());
     }
 
     @Test
@@ -127,38 +127,12 @@ public class ProdutoServiceTest {
         Produto produto = ProdutoConstants.PRODUTO;
         when(produtoRepository.save(any())).thenReturn(produto);
 
-        ProdutoCreateDto produtoCreateDto = new ProdutoCreateDto("Produto 1", "", BigDecimal.TEN);
-        produto = produtoService.salvar(produtoCreateDto);
+        Produto produtoCreate = new Produto("Produto 1", "", BigDecimal.TEN);
+        produto = produtoService.salvar(produtoCreate);
 
-        assertEquals(produtoCreateDto.getNome(), produto.getNome());
-        assertThat(produtoCreateDto.getDescricao()).isBlank();
-        assertEquals(produtoCreateDto.getValor(), produto.getValor());
-    }
-
-    @Test
-
-    public void buscarTodos_RetornarListaDeProdutosComSucesso() {
-        List<ProdutoProjection> listaDeProdutos = Arrays.asList(produtoProjection, produtoProjection, produtoProjection);
-
-        Page<ProdutoProjection> page = new PageImpl<>(listaDeProdutos);
-        when(produtoRepository.findAllPageable(any())).thenReturn(page);
-
-        Page<ProdutoProjection> produtos = produtoService.buscarTodos(any());
-        assertNotNull(produtos);
-        assertEquals(produtos.getTotalElements(), 3);
-    }
-
-    @Test
-    public void buscarTodos_RetornarListaDeProdutosVaziaComSucesso() {
-        List<ProdutoProjection> listaDeProdutos = Arrays.asList();
-
-        Page<ProdutoProjection> page = new PageImpl<>(listaDeProdutos);
-        when(produtoRepository.findAllPageable(any())).thenReturn(page);
-
-        Page<ProdutoProjection> produtos = produtoService.buscarTodos(any());
-
-        assertNotNull(produtos);
-        assertEquals(produtos.getTotalElements(), 0);
+        assertEquals(produtoCreate.getNome(), produto.getNome());
+        assertThat(produtoCreate.getDescricao()).isBlank();
+        assertEquals(produtoCreate.getValor(), produto.getValor());
     }
 
     @Test
@@ -190,5 +164,34 @@ public class ProdutoServiceTest {
 
         assertThatThrownBy(() -> produtoService.deletarProduto(99L)).isInstanceOf(RuntimeException.class);
     }
+
+    @Test
+
+    public void buscarTodos_RetornarListaDeProdutosComSucesso() {
+        List<ProdutoProjection> listaDeProdutos = Arrays.asList(produtoProjection, produtoProjection, produtoProjection);
+
+        Page<ProdutoProjection> page = new PageImpl<>(listaDeProdutos);
+        when(produtoRepository.findAllPageable(any())).thenReturn(page);
+
+        Page<ProdutoProjection> produtos = produtoService.buscarTodos(any());
+        assertNotNull(produtos);
+        assertEquals(produtos.getTotalElements(), 3);
+    }
+
+    @Test
+    public void buscarTodos_RetornarListaDeProdutosVaziaComSucesso() {
+        List<ProdutoProjection> listaDeProdutos = Arrays.asList();
+
+        Page<ProdutoProjection> page = new PageImpl<>(listaDeProdutos);
+        when(produtoRepository.findAllPageable(any())).thenReturn(page);
+
+        Page<ProdutoProjection> produtos = produtoService.buscarTodos(any());
+
+        assertNotNull(produtos);
+        assertEquals(produtos.getTotalElements(), 0);
+    }
+
+
+
 
 }

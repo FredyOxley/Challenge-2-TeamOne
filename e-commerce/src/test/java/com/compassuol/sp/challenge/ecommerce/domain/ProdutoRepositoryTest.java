@@ -31,6 +31,37 @@ public class ProdutoRepositoryTest {
     @AfterEach
     public void afterEach(){PRODUTO.setId(null);}
 
+
+    @Test
+    public void criarProduto_ComDadosvalidos_RetornaProduto() {
+        Produto produto = produtoRepository.save(PRODUTO);
+
+        Produto sut = testEntityManager.find(Produto.class, produto.getId());
+
+        assertThat(sut).isNotNull();
+        assertThat(sut.getNome()).isEqualTo(produto.getNome());
+        assertThat(sut.getDescricao()).isEqualTo(produto.getDescricao());
+        assertThat(sut.getValor()).isEqualTo(produto.getValor());
+    }
+
+    @Test
+    public void criarProduto_ComDadosInvalidos_PropagandoExcecao() {
+        Produto emptyProduto = new Produto();
+        Produto invalidProduto = new Produto("", "", null);
+
+        assertThatThrownBy(() -> produtoRepository.save(emptyProduto)).isInstanceOf(RuntimeException.class);
+        assertThatThrownBy(() -> produtoRepository.save(invalidProduto)).isInstanceOf(RuntimeException.class);
+    }
+
+    @Test
+    public void criarProduto_ComNomeExistente_PropagandoExcecao() {
+        Produto produto = testEntityManager.persistFlushFind(PRODUTO);
+        testEntityManager.detach(produto);
+        produto.setId(null);
+        assertThatThrownBy(() -> produtoRepository.save(produto)).isInstanceOf(RuntimeException.class);
+    }
+
+
     @Test
     public void buscarProduto_PorIdExistente_RetornarProduto() {
         Produto produto = testEntityManager.persistFlushFind(PRODUTO);
