@@ -2,6 +2,7 @@ package com.compassuol.sp.challenge.ecommerce.domain;
 
 import com.compassuol.sp.challenge.ecommerce.domain.produto.entity.Produto;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoRepository;
+import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.QueryBuilder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -9,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Example;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.compassuol.sp.challenge.ecommerce.common.ProdutoConstants.PRODUTO;
@@ -87,5 +90,16 @@ public class ProdutoRepositoryTest {
         Produto deleteProduto = testEntityManager.find(Produto.class, produto.getId());
         assertThat(deleteProduto).isNull();
     }
+
+    @Test
+    public void buscarTodos_RetornaNenhumProduto() {
+        Example<Produto> query = QueryBuilder.makeQuery(new Produto());
+
+        List<Produto> response = produtoRepository.findAll(query);
+
+        assertThat(response).isEmpty();
+    }
+
+
 
 }
