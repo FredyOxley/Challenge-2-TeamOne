@@ -4,8 +4,7 @@ O projeto consiste no desenvolvimento de uma API REST para um e-commerce.
 > Status: Desenvolvimento ⚠️
 
 ### Funcionalidades
-1. Pedido: A funcionalidade Pedido permite que os usuários façam pedidos
-de produtos de um catálogo através de uma API REST.
+1. Produto: A funcionalidade Produto permite que os usuários criem, leiam, atualizem e excluam produtos.
 
 
 
