@@ -71,5 +71,8 @@ O projeto consiste no desenvolvimento de uma API REST para um e-commerce.
 </table>
 
 ### Como Rodar a Aplicação
-1.x
-2.y
+1. Certifique-se de que o Maven está instalado (mvn - v)
+2. Navegue até o diretório raiz onde o arquivo pom.xml está localizado.
+3. Execute o comando mvn clean install para limpar qualquer compilação anteriror e baixar as dependências.
+4. Após os passos anteriores, execute o comando mvn spring-boot:run para iniciar a aplicação.
+5. A aplicação deverá estar em execução e acessível em http://localhost:8080.
