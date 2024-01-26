@@ -6,4 +6,6 @@ Certifique-se de ter o [Java](https://www.oracle.com/java/) instalado em sua má
 
 ### Instruções
 #### Clone o repositório
-
+'''bash
+git clone https://github.com/FredyOxley/Challenge-2-TeamOne.git
+'''
