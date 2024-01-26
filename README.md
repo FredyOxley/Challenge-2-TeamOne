@@ -22,3 +22,5 @@ Certifique-se de ter o [Java](https://www.oracle.com/java/) instalado em sua má
 </table>
 
 ### Como Roda a Aplicação
+1.x
+2.y
