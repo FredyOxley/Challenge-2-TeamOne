@@ -3,11 +3,15 @@ O projeto consiste no desenvolvimento de uma API REST para um e-commerce.
 
 > Status: Desenvolvimento ⚠️
 
-### Pré-requisitos
+### Funcionalidades
+1. Pedido: A funcionalidade Pedido permite que os usuários façam pedidos
+de produtos de um catálogo através de uma API REST.
 
-Certifique-se de ter o [Java](https://www.oracle.com/java/) instalado em sua máquina.
 
-### Tecnologias Utilizadas:
+
+
+
+### Tecnologias Utilizadas
 <table>
   <tr>
     <td>Java</td>
@@ -21,6 +25,6 @@ Certifique-se de ter o [Java](https://www.oracle.com/java/) instalado em sua má
   </tr>
 </table>
 
-### Como Roda a Aplicação
+### Como Rodar a Aplicação
 1.x
 2.y
