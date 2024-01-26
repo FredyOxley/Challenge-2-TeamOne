@@ -17,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import java.math.BigDecimal;
@@ -191,4 +192,72 @@ public class ProdutoServiceTest {
         assertThatThrownBy(() -> produtoService.deletarProduto(99L)).isInstanceOf(RuntimeException.class);
     }
 
+    @Test
+    public void editarProduto_ComDadosValidos_RetornarProduto() {
+        Long id = 1L;
+        Produto produtoExistente = new Produto();
+        ProdutoCreateDto produtoCreateDto = new ProdutoCreateDto("Produto Atualizado", "Nova descrição", BigDecimal.valueOf(20.0));
+
+        when(produtoRepository.findById(id)).thenReturn(Optional.of(produtoExistente));
+        when(produtoRepository.save(any())).thenReturn(produtoExistente);
+
+        Produto resultado = produtoService.editarProduto(id, produtoCreateDto);
+
+        assertEquals(produtoCreateDto.getNome(), resultado.getNome());
+        assertEquals(produtoCreateDto.getDescricao(), resultado.getDescricao());
+        assertEquals(produtoCreateDto.getValor(), resultado.getValor());
+
+        verify(produtoRepository, times(1)).findById(id);
+        verify(produtoRepository, times(1)).save(any(Produto.class));
+    }
+
+    @Test
+    public void editarProduto_ComIdInexistente_LancaExcecao() {
+        when(produtoRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        ProdutoCreateDto produtoCreateDto = new ProdutoCreateDto("Produto inexistente", "Descrição do teste", BigDecimal.valueOf(20.0));
+
+        assertThatThrownBy(() -> produtoService.editarProduto(1L, produtoCreateDto))
+                .isInstanceOf(EntityNotFoundException.class);
+    }
+
+    @Test
+    public void editarProduto_ComNomeNulo_RetornarErro() {
+        Long id = 1L;
+        ProdutoCreateDto produtoCreateDto = new ProdutoCreateDto(null, "Descrição do teste", BigDecimal.valueOf(20.0));
+
+        Produto produtoMock = mock(Produto.class);
+
+        when(produtoRepository.findById(id)).thenReturn(Optional.of(produtoMock));
+
+        doThrow(new IllegalArgumentException("Nome não pode ser nulo")).when(produtoMock).setNome(null);
+
+        assertThatThrownBy(() -> produtoService.editarProduto(id, produtoCreateDto))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Nome não pode ser nulo");
+
+        verify(produtoRepository, times(1)).findById(id);
+
+        verify(produtoRepository, never()).save(any(Produto.class));
+    }
+
+    @Test
+    public void editarProduto_ComDescricaoNula_RetornarErro() {
+        Long id = 1L;
+        ProdutoCreateDto produtoCreateDto = new ProdutoCreateDto("Novo Nome", null, BigDecimal.valueOf(20.0));
+
+        Produto produtoMock = mock(Produto.class);
+
+        when(produtoRepository.findById(id)).thenReturn(Optional.of(produtoMock));
+
+        doThrow(new IllegalArgumentException("Descrição não pode ser nula")).when(produtoMock).setDescricao(null);
+
+        assertThatThrownBy(() -> produtoService.editarProduto(id, produtoCreateDto))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Descrição não pode ser nula");
+
+        verify(produtoRepository, times(1)).findById(id);
+
+        verify(produtoRepository, never()).save(any(Produto.class));
+    }
 }
