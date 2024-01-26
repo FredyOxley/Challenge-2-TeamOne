@@ -165,4 +165,33 @@ public class ProdutoServiceTest {
         assertThatThrownBy(() -> produtoService.deletarProduto(99L)).isInstanceOf(RuntimeException.class);
     }
 
+    @Test
+
+    public void buscarTodos_RetornarListaDeProdutosComSucesso() {
+        List<ProdutoProjection> listaDeProdutos = Arrays.asList(produtoProjection, produtoProjection, produtoProjection);
+
+        Page<ProdutoProjection> page = new PageImpl<>(listaDeProdutos);
+        when(produtoRepository.findAllPageable(any())).thenReturn(page);
+
+        Page<ProdutoProjection> produtos = produtoService.buscarTodos(any());
+        assertNotNull(produtos);
+        assertEquals(produtos.getTotalElements(), 3);
+    }
+
+    @Test
+    public void buscarTodos_RetornarListaDeProdutosVaziaComSucesso() {
+        List<ProdutoProjection> listaDeProdutos = Arrays.asList();
+
+        Page<ProdutoProjection> page = new PageImpl<>(listaDeProdutos);
+        when(produtoRepository.findAllPageable(any())).thenReturn(page);
+
+        Page<ProdutoProjection> produtos = produtoService.buscarTodos(any());
+
+        assertNotNull(produtos);
+        assertEquals(produtos.getTotalElements(), 0);
+    }
+
+
+
+
 }
