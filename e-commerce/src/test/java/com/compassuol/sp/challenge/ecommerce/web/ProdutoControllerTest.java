@@ -8,11 +8,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static com.compassuol.sp.challenge.ecommerce.common.ProdutoConstants.PRODUTO2;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -46,5 +49,20 @@ public class ProdutoControllerTest {
     public void buscarProduto_PorParametroInvalido_RetornarErroComStatus400() throws Exception {
         mockMvc.perform(get("/api/products/invalidID"))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void deletarProduto_PorIdExistente_RetornaNoContent() throws Exception {
+        mockMvc.perform(delete("/api/products/2"))
+                .andExpect(status().isNoContent());
+    }
+    @Test
+    public void deletarProduto_PorIdInexistente_RetornaNotFound() throws Exception {
+        final Long produtoId = 1L;
+
+        doThrow(new EmptyResultDataAccessException(1)).when(produtoService).deletarProduto(produtoId);
+
+        mockMvc.perform(delete("/api/products/" + produtoId))
+                .andExpect(status().isNotFound());
     }
 }

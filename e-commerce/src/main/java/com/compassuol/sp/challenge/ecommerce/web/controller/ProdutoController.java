@@ -83,13 +83,9 @@ public class ProdutoController {
                             content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class)))
             })
     @DeleteMapping("/{id}")
-    @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public void deletarProdutoPorId(@PathVariable Long id) {
-        var produtoOptional = produtoRepository.findById(id);
-        if (produtoOptional.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-        produtoRepository.delete(produtoOptional.get());
+    public ResponseEntity<Void> deletarProdutoPorId(@PathVariable Long id) {
+        produtoService.deletarProduto(id);
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "Recuperar lista de produtos",
