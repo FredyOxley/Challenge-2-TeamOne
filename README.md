@@ -44,15 +44,16 @@ O projeto consiste no desenvolvimento de uma API REST para um e-commerce.
   </tr>
 </table>
 
-
 #### Tabela Produtos:
 + id : chave primária, auto-incremento
 + name : nome do produto
 + value : preço/valor do produto
 + description : descrição do produto
 
-
-
+#### Regras de Negócio
++ O nome do produto deve ser único.
++ A descrição do produto deve ter no mínimo 10 caracteres.
++ O valor do produto deve ser um número positivo.
 
 
 ### Tecnologias Utilizadas
