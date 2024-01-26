@@ -8,7 +8,6 @@ O projeto consiste no desenvolvimento de uma API REST para um e-commerce.
 Certifique-se de ter o [Java](https://www.oracle.com/java/) instalado em sua máquina.
 
 ### Tecnologias Utilizadas:
-
 <table>
   <tr>
     <td>Java</td>
@@ -22,3 +21,4 @@ Certifique-se de ter o [Java](https://www.oracle.com/java/) instalado em sua má
   </tr>
 </table>
 
+### Como Roda a Aplicação
