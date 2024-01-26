@@ -2,11 +2,13 @@ package com.compassuol.sp.challenge.ecommerce.domain.produto.service;
 
 import com.compassuol.sp.challenge.ecommerce.domain.produto.entity.Produto;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.EntityNotFoundException;
+import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.HandlerConflictException;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoProjection;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoRepository;
 import com.compassuol.sp.challenge.ecommerce.web.dto.ProdutoCreateDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,9 +21,13 @@ public class ProdutoService {
     private final ProdutoRepository produtoRepository;
     private final ModelMapper modelMapper;
 
-    public Produto salvar(ProdutoCreateDto produtoCreateDTO) {
-        Produto produto = modelMapper.map(produtoCreateDTO, Produto.class);
-        return produtoRepository.save(produto);
+    public Produto salvar(Produto produto) {
+        try {
+            return produtoRepository.save(produto);
+        }catch (DataIntegrityViolationException ex)
+        {
+            throw new HandlerConflictException("Produto já cadastrado no sistema.");
+        }
     }
 
     @Transactional(readOnly = true)
@@ -36,6 +42,26 @@ public class ProdutoService {
         return produtoRepository.findAllPageable(pageable);
     }
 
+    @Transactional
+    public Produto editarProduto(Long id, ProdutoCreateDto produtoCreateDto) {
+        Produto produto = buscarPorId(id);
+        if (produto != null) {
+
+            produto.setNome(produtoCreateDto.getNome());
+            produto.setDescricao(produtoCreateDto.getDescricao());
+            produto.setValor(produtoCreateDto.getValor());
+
+            return produtoRepository.save(produto);
+        } else {
+            throw new EntityNotFoundException("Produto não encontrado com o ID: " + id);
+        }
+    }
+
+    @Transactional
+    public void deletarProduto(Long id) {
+        buscarPorId(id);
+        produtoRepository.deleteById(id);
+    }
 
 }
 

@@ -9,6 +9,7 @@ import com.compassuol.sp.challenge.ecommerce.web.dto.ProdutoCreateDto;
 import com.compassuol.sp.challenge.ecommerce.web.dto.ProdutoResponseDto;
 import com.compassuol.sp.challenge.ecommerce.web.dto.exception.ErrorMessage;
 import com.compassuol.sp.challenge.ecommerce.web.dto.mapper.PageableMapper;
+import com.compassuol.sp.challenge.ecommerce.web.dto.mapper.ProdutoMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -17,22 +18,22 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.awt.print.Pageable;
-
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY;
 
-@Tag(name = "Produtos", description = "Contém todas as opereções relativas ao recurso de um produto")
+@Tag(name = "Produtos", description = "Contém todas as operações relativas ao recurso de um produto")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/produtos")
+@RequestMapping("/api/products")
 public class ProdutoController {
 
     private final ProdutoService produtoService;
@@ -42,17 +43,20 @@ public class ProdutoController {
             description = "Recurso para criar um novo produto no sistema. ",
             security = @SecurityRequirement(name = "security"),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Recurso criado com sucesso",
+                    @ApiResponse(responseCode = "201", description = "Recurso criado com sucesso",
                             content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ProdutoResponseDto.class))),
                     @ApiResponse(responseCode = "500", description = "Campo invalido! Descrição deve conter 10 caracteres ou mais e o nome do produto não pode ser nulo ou vazio",
                             content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
                     @ApiResponse(responseCode = "400", description = "Recurso não processado por falta de dados ou dados inválidos",
                             content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
+                    @ApiResponse(responseCode = "409", description = "Produto já cadastrado",
+                            content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
             })
     @PostMapping
-    public ResponseEntity<Produto> criarProduto(@RequestBody ProdutoCreateDto produtoCreateDTO) {
-        Produto produtoCriado = produtoService.salvar(produtoCreateDTO);
-        return ResponseEntity.ok(produtoCriado);
+    public ResponseEntity<ProdutoResponseDto> criarProduto(@RequestBody @Valid ProdutoCreateDto produtoCreateDTO) {
+        Produto produtoCriado = ProdutoMapper.toProduto(produtoCreateDTO);
+        produtoService.salvar(produtoCriado);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ProdutoMapper.toDto(produtoCriado));
     }
 
     @Operation(summary = "Localizar um produto", description = "Recurso para localizar um produto pelo ID.",
@@ -118,7 +122,7 @@ public class ProdutoController {
     @GetMapping
     public ResponseEntity<PageableDto> getAll(@Parameter(hidden = true)
                                               @PageableDefault(size = 5, sort = {"nome"}) Pageable pageable) {
-        Page<ProdutoProjection> produtos = produtoService.buscarTodos((org.springframework.data.domain.Pageable) pageable);
+        Page<ProdutoProjection> produtos = produtoService.buscarTodos(pageable);
         return ResponseEntity.ok(PageableMapper.toDto(produtos));
     }
 
