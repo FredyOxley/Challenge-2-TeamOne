@@ -5,19 +5,14 @@ import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.EntityNotF
 import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.HandlerConflictException;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoProjection;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoRepository;
-import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.QueryBuilder;
 import com.compassuol.sp.challenge.ecommerce.web.dto.ProdutoCreateDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service
