@@ -28,6 +28,7 @@ public class Pedido {
 
     @OneToMany
     @JoinTable( name = "id_products")
+
     private List<Produto> produto;
 
     @Column(name = "endereco", nullable = false)

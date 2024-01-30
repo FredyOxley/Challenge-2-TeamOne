@@ -3,10 +3,12 @@ package com.compassuol.sp.challenge.ecommerce.web.controller;
 
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.entity.Pedido;
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.service.PedidoService;
+import com.compassuol.sp.challenge.ecommerce.web.dto.PedidoCreateDto;
+import com.compassuol.sp.challenge.ecommerce.web.dto.PedidoResponseDto;
+import com.compassuol.sp.challenge.ecommerce.web.dto.mapper.PedidoMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,9 +24,10 @@ public class PedidoController {
 
     private final PedidoService pedidoService;
     @PostMapping
-    public ResponseEntity<Pedido> salvar(@RequestBody @Valid Pedido pedido)
-    {
+    public ResponseEntity<PedidoResponseDto> criarPedido(@RequestBody @Valid PedidoCreateDto pedidoCreateDto) {
+        Pedido pedido = PedidoMapper.toPedido(pedidoCreateDto);
         Pedido pedidoSalvo = pedidoService.salvar(pedido);
-        return ResponseEntity.status(HttpStatus.CREATED).body(pedidoSalvo);
+        PedidoResponseDto pedidoResponseDto = PedidoMapper.toDto(pedidoSalvo);
+        return ResponseEntity.status(HttpStatus.CREATED).body(pedidoResponseDto);
     }
 }

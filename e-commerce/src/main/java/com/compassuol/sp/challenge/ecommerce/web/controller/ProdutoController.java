@@ -1,6 +1,7 @@
 package com.compassuol.sp.challenge.ecommerce.web.controller;
 
 import com.compassuol.sp.challenge.ecommerce.domain.produto.entity.Produto;
+import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.UnprocessableEntityException;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoProjection;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoRepository;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.service.ProdutoService;
@@ -26,6 +27,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
 
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY;
 
@@ -134,10 +137,13 @@ public class ProdutoController {
                     @ApiResponse(responseCode = "400", description = "Requisição inválida por falta de dados ou dados inválidos",
                             content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
             })
+
+
     @PutMapping("/{id}")
-    public ResponseEntity<ProdutoResponseDto> atualizarProduto(@Valid @PathVariable Long id ,@RequestBody ProdutoCreateDto produtoCreateDTO) {
-        Produto produto = produtoService.editarProduto(id, produtoCreateDTO);
-        return ResponseEntity.ok(ProdutoMapper.toDto(produto));
+    public ResponseEntity<ProdutoResponseDto> atualizarProduto(@Valid @PathVariable Long id ,@RequestBody @Valid ProdutoCreateDto produtoCreateDTO) {
+            Produto produto = produtoService.editarProduto(id, produtoCreateDTO);
+            return ResponseEntity.ok(ProdutoMapper.toDto(produto));
+
     }
 
 
