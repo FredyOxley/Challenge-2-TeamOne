@@ -1,6 +1,7 @@
 package com.compassuol.sp.challenge.ecommerce.domain.pedido.entity;
 
 
+import com.compassuol.sp.challenge.ecommerce.domain.endereco.entity.Endereco;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.entity.Produto;
 import jakarta.persistence.*;
 import lombok.*;
@@ -30,8 +31,8 @@ public class Pedido {
     @JoinTable( name = "id_products")
     private List<Produto> produto;
 
-    @Column(name = "endereco", nullable = false)
-    private String endereco;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Endereco enderecoEntrega;
 
     @Column(name = "metodo_pagamento", nullable = false)
     private String metodoPagamento;
