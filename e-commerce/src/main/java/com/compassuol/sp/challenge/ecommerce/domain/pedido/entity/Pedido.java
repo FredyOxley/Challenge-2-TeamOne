@@ -28,22 +28,22 @@ public class Pedido {
     private Long id;
 
     @OneToMany
-    @JoinTable( name = "id_products")
+    @JoinTable(name = "id_products")
     private List<Produto> produto;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Endereco enderecoEntrega;
 
-    @Column(name = "metodo_pagamento", nullable = false)
-    private String metodoPagamento;
+    @Column(name = "metodo_pagamento")
+    private MetodoDePagamento metodoPagamento;
 
-    @Column(name = "valor_sub_total", nullable = false)
+    @Column(name = "valor_sub_total")
     private BigDecimal valorSubTotal;
 
-    @Column(name = "desconto", nullable = false)
+    @Column(name = "desconto")
     private BigDecimal desconto;
 
-    @Column(name = "valor_total", nullable = false)
+    @Column(name = "valor_total")
     private BigDecimal valorTotal;
 
     @CreatedDate
@@ -51,7 +51,7 @@ public class Pedido {
     private LocalDateTime dataCriacao;
 
     @Column(name = "status", nullable = false)
-    private String status;
+    private StatusPedido statusPedido = StatusPedido.CONFIRMADO;
 
     @Column(name = "motivo_cancelamento")
     private String motivoCancelamento;
