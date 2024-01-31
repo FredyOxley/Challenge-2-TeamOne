@@ -5,9 +5,9 @@ import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.EntityNotF
 import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.HandlerConflictException;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoRepository;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.service.ProdutoService;
-import com.compassuol.sp.challenge.ecommerce.web.controller.ProdutoController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -15,16 +15,12 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Collections;
-
 import static com.compassuol.sp.challenge.ecommerce.common.ProdutoConstants.PRODUTO;
 import static com.compassuol.sp.challenge.ecommerce.common.ProdutoConstants.PRODUTO2;
-import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProdutoController.class)
@@ -36,14 +32,16 @@ public class ProdutoControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
+    private ModelMapper modelMapper;
+
+    @MockBean
     private ProdutoService produtoService;
 
     @MockBean
     private ProdutoRepository produtoRepository;
 
-
     @Test
-    public void CriarProdutot_ComDadosValidos_RetornaOk() throws Exception {
+    public void CriarProduto_ComDadosValidos_RetornaOk() throws Exception {
         when(produtoService.salvar(PRODUTO2)).thenReturn(PRODUTO2);
 
         mockMvc
@@ -52,8 +50,6 @@ public class ProdutoControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
     }
-
-
 
     @Test
     public void CriarProduto_ComDadosInvalidos_RetornaBadRequest() throws Exception {
@@ -83,7 +79,6 @@ public class ProdutoControllerTest {
                 .andExpect(status().isConflict());
     }
 
-
     @Test
     public void buscarProduto_PorIdExistente_RetornarProduto() throws Exception {
         when(produtoService.buscarPorId(2L)).thenReturn(PRODUTO2);
@@ -110,6 +105,7 @@ public class ProdutoControllerTest {
         mockMvc.perform(delete("/api/products/2"))
                 .andExpect(status().isNoContent());
     }
+
     @Test
     public void deletarProduto_PorIdInexistente_RetornaNotFound() throws Exception {
         final Long produtoId = 1L;
@@ -119,6 +115,4 @@ public class ProdutoControllerTest {
         mockMvc.perform(delete("/api/products/" + produtoId))
                 .andExpect(status().isNotFound());
     }
-
-
 }
