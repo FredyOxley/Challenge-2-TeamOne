@@ -1,7 +1,8 @@
-package com.compassuol.sp.challenge.ecommerce.web.dto.exception;
+package com.compassuol.sp.challenge.ecommerce.web.exception;
 
 import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.EntityNotFoundException;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.HandlerConflictException;
+import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.InvalidDataException;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.UnprocessableEntityException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -109,6 +110,14 @@ public class ApiExceptionHandler {
         }
     }
 
+    @ExceptionHandler(InvalidDataException.class)
+    public ResponseEntity<ErrorMessage> handleInvalidDataException(InvalidDataException ex, HttpServletRequest request) {
+        log.error("Api Error - ", ex);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
+    }
 
 
 

@@ -1,16 +1,17 @@
 package com.compassuol.sp.challenge.ecommerce.domain.pedido.entity;
 
 
-
+import com.compassuol.sp.challenge.ecommerce.domain.pedido.enums.MetodoDePagamento;
+import com.compassuol.sp.challenge.ecommerce.domain.pedido.enums.StatusPedido;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.entity.Produto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,21 +21,23 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Entity
 @AllArgsConstructor
+@EqualsAndHashCode
 @Table(name = "pedidos")
 public class Pedido {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Produto> produtos = new ArrayList<>();
+    @ManyToMany
+    private List<Produto> produtos;
 
-
-
+    @Enumerated(EnumType.STRING)
     @Column(name = "metodo_pagamento")
     private MetodoDePagamento metodoPagamento;
+
+    @ManyToOne
+    private Endereco endereco;
 
     @Column(name = "valor_sub_total")
     private BigDecimal valorSubTotal;
@@ -45,12 +48,12 @@ public class Pedido {
     @Column(name = "valor_total")
     private BigDecimal valorTotal;
 
-    @CreatedDate
     @Column(name = "data_criacao")
     private LocalDateTime dataCriacao;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private StatusPedido statusPedido = StatusPedido.CONFIRMADO;
+    private StatusPedido statusPedido;
 
     @Column(name = "motivo_cancelamento")
     private String motivoCancelamento;
@@ -58,29 +61,4 @@ public class Pedido {
     @Column(name = "data_cancelamento")
     private LocalDateTime dataCancelamento;
 
-    public enum StatusPedido {
-        CONFIRMADO, ENVIADO, CANCELADO
-    }
-
-    public enum MetodoDePagamento {
-        CARTAO_CREDITO, TRANSFERENCIA_BANCARIA, CRYPTOMOEDA, GIFT_CARD, PIX, OUTROS
-    }
-
-
-
-    @Override
-    public final boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null) return false;
-        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
-        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
-        if (thisEffectiveClass != oEffectiveClass) return false;
-        Pedido pedido = (Pedido) o;
-        return getId() != null && Objects.equals(getId(), pedido.getId());
-    }
-
-    @Override
-    public final int hashCode() {
-        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
-    }
 }

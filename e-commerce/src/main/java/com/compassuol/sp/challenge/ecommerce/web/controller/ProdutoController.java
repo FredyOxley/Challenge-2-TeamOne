@@ -1,16 +1,13 @@
 package com.compassuol.sp.challenge.ecommerce.web.controller;
 
 import com.compassuol.sp.challenge.ecommerce.domain.produto.entity.Produto;
-import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.UnprocessableEntityException;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoProjection;
-import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoRepository;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.service.ProdutoService;
 import com.compassuol.sp.challenge.ecommerce.web.dto.PageableDto;
+import com.compassuol.sp.challenge.ecommerce.web.dto.mapper.PageableMapper;
 import com.compassuol.sp.challenge.ecommerce.web.dto.ProdutoCreateDto;
 import com.compassuol.sp.challenge.ecommerce.web.dto.ProdutoResponseDto;
-import com.compassuol.sp.challenge.ecommerce.web.dto.exception.ErrorMessage;
-import com.compassuol.sp.challenge.ecommerce.web.dto.mapper.PageableMapper;
-import com.compassuol.sp.challenge.ecommerce.web.dto.mapper.ProdutoMapper;
+import com.compassuol.sp.challenge.ecommerce.web.exception.ErrorMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -21,14 +18,13 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.math.BigDecimal;
 
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY;
 
@@ -38,8 +34,8 @@ import static io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY;
 @RequestMapping("/api/products")
 public class ProdutoController {
 
+    private final ModelMapper modelMapper; 
     private final ProdutoService produtoService;
-    private final ProdutoRepository produtoRepository;
 
     @Operation(summary = "Criar um novo produto",
             description = "Recurso para criar um novo produto no sistema. ",
@@ -56,9 +52,9 @@ public class ProdutoController {
             })
     @PostMapping
     public ResponseEntity<ProdutoResponseDto> criarProduto(@RequestBody @Valid ProdutoCreateDto produtoCreateDTO) {
-        Produto produtoCriado = ProdutoMapper.toProduto(produtoCreateDTO);
+        Produto produtoCriado = modelMapper.map(produtoCreateDTO, Produto.class);
         produtoService.salvar(produtoCriado);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ProdutoMapper.toDto(produtoCriado));
+        return ResponseEntity.status(HttpStatus.CREATED).body(modelMapper.map(produtoCriado, ProdutoResponseDto.class));
     }
 
     @Operation(summary = "Localizar um produto", description = "Recurso para localizar um produto pelo ID.",
@@ -137,15 +133,10 @@ public class ProdutoController {
                     @ApiResponse(responseCode = "400", description = "Requisição inválida por falta de dados ou dados inválidos",
                             content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
             })
-
-
     @PutMapping("/{id}")
-    public ResponseEntity<ProdutoResponseDto> atualizarProduto(@Valid @PathVariable Long id ,@RequestBody @Valid ProdutoCreateDto produtoCreateDTO) {
-            Produto produto = produtoService.editarProduto(id, produtoCreateDTO);
-            return ResponseEntity.ok(ProdutoMapper.toDto(produto));
-
+    public ResponseEntity<ProdutoResponseDto> atualizarProduto(@PathVariable Long id ,@Valid @RequestBody ProdutoCreateDto produtoCreateDTO) {
+        Produto produto = produtoService.editarProduto(id, produtoCreateDTO);
+        return ResponseEntity.ok(modelMapper.map(produto, ProdutoResponseDto.class));
     }
-
-
 
 }

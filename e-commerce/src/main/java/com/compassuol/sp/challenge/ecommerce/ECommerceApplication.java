@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
-@EnableFeignClients // Habilita o uso de Feign Clients
+@EnableFeignClients
 public class ECommerceApplication {
 
 	public static void main(String[] args) {
