@@ -5,21 +5,17 @@ import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoRe
 import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.QueryBuilder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Example;
 
 import java.util.List;
 import java.util.Optional;
 
 import static com.compassuol.sp.challenge.ecommerce.common.ProdutoConstants.PRODUTO;
-import static com.compassuol.sp.challenge.ecommerce.common.ProdutoConstants.PRODUTO2;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.doThrow;
 
 
 @DataJpaTest
@@ -32,11 +28,12 @@ public class ProdutoRepositoryTest {
     private TestEntityManager testEntityManager;
 
     @AfterEach
-    public void afterEach(){PRODUTO.setId(null);}
-
+    public void afterEach() {
+        PRODUTO.setId(null);
+    }
 
     @Test
-    public void criarProduto_ComDadosvalidos_RetornaProduto() {
+    public void criarProduto_ComDadosValidos_RetornaProduto() {
         Produto produto = produtoRepository.save(PRODUTO);
 
         Produto sut = testEntityManager.find(Produto.class, produto.getId());
@@ -63,7 +60,6 @@ public class ProdutoRepositoryTest {
         produto.setId(null);
         assertThatThrownBy(() -> produtoRepository.save(produto)).isInstanceOf(RuntimeException.class);
     }
-
 
     @Test
     public void buscarProduto_PorIdExistente_RetornarProduto() {
@@ -99,13 +95,4 @@ public class ProdutoRepositoryTest {
 
         assertThat(response).isEmpty();
     }
-
-
-
-
-
-
-
-
-
 }
