@@ -1,5 +1,6 @@
 package com.compassuol.sp.challenge.ecommerce.web.dto;
 
+import com.compassuol.sp.challenge.ecommerce.domain.produto.entity.Produto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,14 +16,9 @@ import java.util.List;
 @AllArgsConstructor
 public class PedidoResponseDto {
     private Long id;
+    private List<Long> produtosIds;
     private String endereco;
     private String metodoPagamento;
-    private BigDecimal valorSubTotal;
-    private BigDecimal desconto;
-    private BigDecimal valorTotal;
     private LocalDateTime dataCriacao;
     private String status;
-    private String motivoCancelamento;
-    private LocalDateTime dataCancelamento;
-    private List<Long> produtosIds;
 }
