@@ -1,4 +1,4 @@
-package com.compassuol.sp.challenge.ecommerce.web.dto.exception;
+package com.compassuol.sp.challenge.ecommerce.web.exception;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.servlet.http.HttpServletRequest;

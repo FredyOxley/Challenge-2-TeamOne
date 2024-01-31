@@ -1,4 +1,4 @@
-package com.compassuol.sp.challenge.ecommerce.web.dto.exception;
+package com.compassuol.sp.challenge.ecommerce.web.exception;
 
 import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.EntityNotFoundException;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.HandlerConflictException;
