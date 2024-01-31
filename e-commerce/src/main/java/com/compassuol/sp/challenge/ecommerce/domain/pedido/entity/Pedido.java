@@ -1,7 +1,7 @@
 package com.compassuol.sp.challenge.ecommerce.domain.pedido.entity;
 
 
-import com.compassuol.sp.challenge.ecommerce.domain.endereco.entity.Endereco;
+
 import com.compassuol.sp.challenge.ecommerce.domain.produto.entity.Produto;
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,6 +10,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,24 +28,21 @@ public class Pedido {
 
     private Long id;
 
-    @OneToMany
-    @JoinTable( name = "id_products")
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Produto> produtos = new ArrayList<>();
 
-    private List<Produto> produto;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private Endereco enderecoEntrega;
 
-    @Column(name = "metodo_pagamento", nullable = false)
-    private String metodoPagamento;
+    @Column(name = "metodo_pagamento")
+    private MetodoDePagamento metodoPagamento;
 
-    @Column(name = "valor_sub_total", nullable = false)
+    @Column(name = "valor_sub_total")
     private BigDecimal valorSubTotal;
 
-    @Column(name = "desconto", nullable = false)
+    @Column(name = "desconto")
     private BigDecimal desconto;
 
-    @Column(name = "valor_total", nullable = false)
+    @Column(name = "valor_total")
     private BigDecimal valorTotal;
 
     @CreatedDate
@@ -52,7 +50,7 @@ public class Pedido {
     private LocalDateTime dataCriacao;
 
     @Column(name = "status", nullable = false)
-    private String status;
+    private StatusPedido statusPedido = StatusPedido.CONFIRMADO;
 
     @Column(name = "motivo_cancelamento")
     private String motivoCancelamento;

@@ -57,6 +57,7 @@ try{
         }
     }catch(UnprocessableEntityException ex) {
     throw new UnprocessableEntityException("Campo invalido! Descrição deve conter 10 caracteres ou mais e o nome do produto não pode ser nulo ou vazio");
+
 }
 
     }

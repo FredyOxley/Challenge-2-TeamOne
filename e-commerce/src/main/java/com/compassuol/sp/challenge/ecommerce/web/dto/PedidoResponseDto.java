@@ -14,15 +14,28 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PedidoResponseDto {
+
+    //produtos
     private Long id;
-    private String endereco;
+
+    private List<Long> produtosIds;
+
+    //endereco
+    private String cep;
+    private String numero;
+    private String complemento;
+
+    //viacep cidade, rua, estado.
+
+
+    //pagamentos
     private String metodoPagamento;
     private BigDecimal valorSubTotal;
     private BigDecimal desconto;
     private BigDecimal valorTotal;
+
+
+    // create date
     private LocalDateTime dataCriacao;
     private String status;
-    private String motivoCancelamento;
-    private LocalDateTime dataCancelamento;
-    private List<Long> produtosIds;
 }
