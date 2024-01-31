@@ -2,6 +2,8 @@ package com.compassuol.sp.challenge.ecommerce.web.exception;
 
 import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.EntityNotFoundException;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.HandlerConflictException;
+import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.InvalidDataException;
+import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.UnprocessableEntityException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -97,6 +100,24 @@ public class ApiExceptionHandler {
                 .body(new ErrorMessage(request ,HttpStatus.CONFLICT, ex.getMessage()));
     }
 
+
+
+    @ControllerAdvice
+    public class GlobalExceptionHandler {
+        @ExceptionHandler(UnprocessableEntityException.class)
+        public ResponseEntity<Object> handleUnprocessableEntityException(UnprocessableEntityException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+    }
+
+    @ExceptionHandler(InvalidDataException.class)
+    public ResponseEntity<ErrorMessage> handleInvalidDataException(InvalidDataException ex, HttpServletRequest request) {
+        log.error("Api Error - ", ex);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
+    }
 
 
 

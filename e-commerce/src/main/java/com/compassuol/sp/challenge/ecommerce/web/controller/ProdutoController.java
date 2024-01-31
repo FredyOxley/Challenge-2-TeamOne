@@ -2,10 +2,9 @@ package com.compassuol.sp.challenge.ecommerce.web.controller;
 
 import com.compassuol.sp.challenge.ecommerce.domain.produto.entity.Produto;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoProjection;
-import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoRepository;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.service.ProdutoService;
 import com.compassuol.sp.challenge.ecommerce.web.dto.PageableDto;
-import com.compassuol.sp.challenge.ecommerce.web.dto.PageableMapper;
+import com.compassuol.sp.challenge.ecommerce.web.dto.mapper.PageableMapper;
 import com.compassuol.sp.challenge.ecommerce.web.dto.ProdutoCreateDto;
 import com.compassuol.sp.challenge.ecommerce.web.dto.ProdutoResponseDto;
 import com.compassuol.sp.challenge.ecommerce.web.exception.ErrorMessage;
@@ -135,11 +134,9 @@ public class ProdutoController {
                             content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
             })
     @PutMapping("/{id}")
-    public ResponseEntity<ProdutoResponseDto> atualizarProduto(@Valid @PathVariable Long id ,@RequestBody ProdutoCreateDto produtoCreateDTO) {
+    public ResponseEntity<ProdutoResponseDto> atualizarProduto(@PathVariable Long id ,@Valid @RequestBody ProdutoCreateDto produtoCreateDTO) {
         Produto produto = produtoService.editarProduto(id, produtoCreateDTO);
         return ResponseEntity.ok(modelMapper.map(produto, ProdutoResponseDto.class));
     }
-
-
 
 }
