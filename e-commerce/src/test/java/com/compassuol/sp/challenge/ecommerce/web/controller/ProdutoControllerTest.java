@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
@@ -26,12 +25,13 @@ import java.util.Collections;
 
 import static com.compassuol.sp.challenge.ecommerce.common.ProdutoConstants.PRODUTO;
 import static com.compassuol.sp.challenge.ecommerce.common.ProdutoConstants.PRODUTO2;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -200,13 +200,13 @@ public class ProdutoControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-  @Test
-   public void atualizarProduto_WithInvalidData_ReturnsUnprocessableEntity() throws Exception {
-       ProdutoCreateDto produtoCreateDto = new ProdutoCreateDto("", "", BigDecimal.valueOf(-1));
+    @Test
+    public void atualizarProduto_WithInvalidData_ReturnsUnprocessableEntity() throws Exception {
+        ProdutoCreateDto produtoCreateDto = new ProdutoCreateDto("", "", BigDecimal.valueOf(-1));
 
         mockMvc.perform(put("/api/products/1")
-                      .contentType(MediaType.APPLICATION_JSON)
-                       .content(objectMapper.writeValueAsString(produtoCreateDto)))
-              .andExpect(status().isUnprocessableEntity());
-   }
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(produtoCreateDto)))
+                .andExpect(status().isUnprocessableEntity());
+    }
 }
