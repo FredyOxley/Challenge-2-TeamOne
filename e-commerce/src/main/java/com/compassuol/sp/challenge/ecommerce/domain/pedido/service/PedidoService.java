@@ -10,9 +10,7 @@ import com.compassuol.sp.challenge.ecommerce.domain.produto.entity.Produto;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.EntityNotFoundException;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.service.ProdutoService;
 import com.compassuol.sp.challenge.ecommerce.web.client.ViaCepClient;
-import com.compassuol.sp.challenge.ecommerce.web.dto.PedidoCancelDto;
-import com.compassuol.sp.challenge.ecommerce.web.dto.PedidoCreateDto;
-import com.compassuol.sp.challenge.ecommerce.web.dto.ViaCepClientDto;
+import com.compassuol.sp.challenge.ecommerce.web.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -42,7 +40,7 @@ public class PedidoService {
         pedidoParaCriar.setEndereco(endereco);
         List<Produto> produtos = new ArrayList<>();
 
-        for (PedidoCreateDto.ItemPedidoDto item : pedidoCreateDto.getProdutos()) {
+        for (ItemPedidoDto item : pedidoCreateDto.getProdutos()) {
             Produto produtoId = produtoService.buscarPorId(item.getIdProduto());
             produtos.add(produtoId);
         }
@@ -51,10 +49,23 @@ public class PedidoService {
         pedidoParaCriar.setStatusPedido(StatusPedido.CONFIRMADO);
         pedidoParaCriar.setDataCriacao(LocalDateTime.parse(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ISO_DATE_TIME)));
 
-        return pedidoRepository.save(pedidoParaCriar);
+
+        // pra baixo tem que arrumar
+        pedidoParaCriar.setValorSubTotal(produtos.stream().map(Produto::getValor).reduce(BigDecimal.ZERO, BigDecimal::add));
+
+        if (pedidoParaCriar.getMetodoPagamento() != MetodoDePagamento.PIX) {
+            pedidoParaCriar.setDesconto(BigDecimal.valueOf(0));
+            pedidoParaCriar.setValorTotal(pedidoParaCriar.getValorSubTotal());
+            return pedidoRepository.save(pedidoParaCriar);
+        } else {
+            pedidoParaCriar.setDesconto(pedidoParaCriar.getValorSubTotal().multiply(BigDecimal.valueOf(0.05)));
+            pedidoParaCriar.setValorTotal(pedidoParaCriar.getValorSubTotal().subtract(pedidoParaCriar.getDesconto()));
+            return pedidoRepository.save(pedidoParaCriar);
+        }
     }
 
-    public Endereco buscarEnderecoPorCep(PedidoCreateDto.EnderecoDto enderecoDto) {
+
+    public Endereco buscarEnderecoPorCep(EnderecoDto enderecoDto) {
         ViaCepClientDto viaCepClientDto = viaCepClient.findByCep(enderecoDto.getCep());
         Endereco endereco = modelMapper.map(viaCepClientDto, Endereco.class);
         endereco.setNumeroEndereco(enderecoDto.getNumero());
