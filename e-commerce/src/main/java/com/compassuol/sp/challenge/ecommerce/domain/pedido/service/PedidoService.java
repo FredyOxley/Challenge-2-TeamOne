@@ -8,14 +8,11 @@ import com.compassuol.sp.challenge.ecommerce.domain.pedido.repository.EnderecoRe
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.repository.PedidoRepository;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.entity.Produto;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.EntityNotFoundException;
-import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.EntityNotFoundException;
-import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoRepository;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.service.ProdutoService;
 import com.compassuol.sp.challenge.ecommerce.web.client.ViaCepClient;
 import com.compassuol.sp.challenge.ecommerce.web.dto.PedidoCancelDto;
 import com.compassuol.sp.challenge.ecommerce.web.dto.PedidoCreateDto;
 import com.compassuol.sp.challenge.ecommerce.web.dto.ViaCepClientDto;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -57,9 +54,7 @@ public class PedidoService {
         return pedidoRepository.save(pedidoParaCriar);
     }
 
-    private Endereco buscarEnderecoPorCep(PedidoCreateDto.EnderecoDto enderecoDto) {
-//    public Endereco buscarEnderecoPorCep(PedidoCreateDto.EnderecoDto enderecoDto)
-    {
+    public Endereco buscarEnderecoPorCep(PedidoCreateDto.EnderecoDto enderecoDto) {
         ViaCepClientDto viaCepClientDto = viaCepClient.findByCep(enderecoDto.getCep());
         Endereco endereco = modelMapper.map(viaCepClientDto, Endereco.class);
         endereco.setNumeroEndereco(enderecoDto.getNumero());
@@ -68,6 +63,7 @@ public class PedidoService {
         return enderecoRepository.save(endereco);
     }
 
+    @Transactional(readOnly = true)
     public Pedido buscarPorId(Long id) {
         return pedidoRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(String.format("Pedido com id '%s' não encontrado no sistema.", id))
@@ -98,9 +94,9 @@ public class PedidoService {
         return pedidoRepository.save(pedido);
     }
 
-    public void validarPedidoParaCancelar(Pedido pedido){
+    public void validarPedidoParaCancelar(Pedido pedido) {
 
-        if(StatusPedido.ENVIADO.equals(pedido.getStatusPedido())) {
+        if (StatusPedido.ENVIADO.equals(pedido.getStatusPedido())) {
             throw new IllegalStateException("Não é possível cancelar um pedido"); //COLOCAR NO HANDLER
         }
 
@@ -109,6 +105,4 @@ public class PedidoService {
             throw new IllegalStateException("Não é possível cancelar um pedido que já passou de 90 dias");
         }
     }
-
-
 }
