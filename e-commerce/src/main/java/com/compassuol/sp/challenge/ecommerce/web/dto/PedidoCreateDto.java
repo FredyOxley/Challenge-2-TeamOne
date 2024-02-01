@@ -13,18 +13,11 @@ public class PedidoCreateDto {
     private EnderecoDto endereco;
     private String metodoPagamento;
 
-    @Getter //separar
-    @Setter
-    public static class ItemPedidoDto {
-        private Long idProduto;
-        private int quantidade;
-    }
 
-    @Getter //separar
-    @Setter
-    public static class EnderecoDto {
-        private Integer numero;
-        private String complemento;
-        private String cep;
-    }
+
+
+
+    private Double valorTotal;
+    private Double valorSubTotal;
+    private Double desconto;
 }
