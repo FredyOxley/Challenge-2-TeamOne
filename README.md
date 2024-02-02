@@ -194,6 +194,9 @@ Resposta:
 ```
 
 `POST /api/orders/{id}`
+
+Adiciona um novo pedido
+
 ```
 {
   "produtos": [
@@ -214,6 +217,34 @@ Resposta:
   "metodoPagamento": "PIX"
 }
 ```
+
+`PUT /api/orders/{id}`
+
+Atualiza um pedido pelo ID
+
+Solicitação:
+
+```
+{
+  "produtos": [
+{
+  "idProduto": 1,
+  "quantidade": 2
+},
+{
+  "idProduto": 2,
+  "quantidade": 5
+}
+],
+  "endereco": {
+  "numero": 20,
+  "complemento": "apartamento",
+  "cep": "01310930"
+},
+  "metodoPagamento": "CARTAO DE CRÉDITO"
+}
+```
+
 
 
 
