@@ -1,7 +1,88 @@
 # Challenge II - PB Springboot Dez 2023
-O projeto consiste no desenvolvimento de uma API REST para um e-commerce.
+> Status: Entregue
+-------------------------------------------------------------------------------------------------------
 
-> Status: Desenvolvimento ⚠️
+
+O projeto consiste em uma solução robusta desenvolvida em Spring Boot para gerenciar informações de produtos e pedidos. A API oferece todas as operações de um CRUD para a execução de produtos e pedidos.
+
+### Colaboradores
+
+<table>
+  <tr>
+    <td>E-mail</td>
+    <td>GitHub</td>
+  </tr>
+  <tr>
+    <td>E-mail</td>
+    <td>oPedr1nhoo</td>
+  </tr>
+   <tr>
+    <td>E-mail</td>
+    <td>raphael-araujo</td>
+  </tr>
+   <tr>
+    <td>E-mail</td>
+    <td>AlexSpohr</td>
+  </tr>
+   <tr>
+    <td>E-mail</td>
+    <td>lepaupitz</td>
+  </tr>
+   <tr>
+    <td>E-mail</td>
+    <td>FredyOxley</td>
+  </tr>
+    <tr>
+    <td>E-mail</td>
+    <td>CazaliU</td>
+  </tr>
+</table>
+
+-------------------------------------------------------------------------------------------------------
+
+### Tecnologias Utilizadas
+<table>
+  <tr>
+    <td>Java</td>
+    <td>Spring</td>
+    <td>MySql</td>
+  </tr>
+  <tr>
+    <td>17.*</td>
+    <td>3.2</td>
+    <td>8.0</td>
+  </tr>
+</table>
+
+-------------------------------------------------------------------------------------------------------
+
+### Setup
+1. Clone o repositório
+```
+git clone https://github.com/FredyOxley/Challenge-2-TeamOne.git
+```
+2. Configure o banco de dados no arquivo `application.properties`
+
+3. Execute a aplicação
+```
+mvn spring-boot:run
+```
+A aplicação deverá estar em execução e acessível em http://localhost:8080/
+
+-------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------
+
 
 ### Funcionalidades
 1. Produto: A funcionalidade Produto permite que os usuários criem, leiam, atualizem e excluam produtos.
