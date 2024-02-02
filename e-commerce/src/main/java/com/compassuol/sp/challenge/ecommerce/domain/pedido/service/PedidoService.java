@@ -40,19 +40,20 @@ public class PedidoService {
         pedidoParaCriar.setMetodoPagamento(MetodoDePagamento.valueOf(pedidoCreateDto.getMetodoPagamento()));
         pedidoParaCriar.setEndereco(endereco);
         List<Produto> produtos = new ArrayList<>();
+        BigDecimal totalValorProduto = BigDecimal.ZERO;
 
         for (ItemPedidoDto item : pedidoCreateDto.getProdutos()) {
             Produto produtoId = produtoService.buscarPorId(item.getIdProduto());
             produtos.add(produtoId);
+            pedidoParaCriar.setValorSubTotal(produtoId.getValor().multiply(BigDecimal.valueOf(item.getProdutoQuantidade())));
+            totalValorProduto = totalValorProduto.add(pedidoParaCriar.getValorSubTotal());
         }
 
         pedidoParaCriar.setProdutos(produtos);
+        pedidoParaCriar.setValorSubTotal(totalValorProduto);
         pedidoParaCriar.setStatusPedido(StatusPedido.CONFIRMADO);
         pedidoParaCriar.setDataCriacao(LocalDateTime.parse(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ISO_DATE_TIME)));
 
-
-        // pra baixo tem que arrumar
-        pedidoParaCriar.setValorSubTotal(produtos.stream().map(Produto::getValor).reduce(BigDecimal.ZERO, BigDecimal::add));
 
         if (pedidoParaCriar.getMetodoPagamento() != MetodoDePagamento.PIX) {
             pedidoParaCriar.setDesconto(BigDecimal.valueOf(0));
