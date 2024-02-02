@@ -6,14 +6,10 @@ import com.compassuol.sp.challenge.ecommerce.domain.pedido.enums.StatusPedido;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.entity.Produto;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.proxy.HibernateProxy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 
 @Getter
@@ -60,8 +56,5 @@ public class Pedido {
 
     @Column(name = "data_cancelamento")
     private LocalDateTime dataCancelamento;
-
-
-    private Integer produtoQuantidade;
 
 }
