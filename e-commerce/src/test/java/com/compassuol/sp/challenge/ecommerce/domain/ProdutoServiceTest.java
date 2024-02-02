@@ -23,17 +23,15 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.compassuol.sp.challenge.ecommerce.common.ProdutoConstants.PRODUTO;
+import static com.compassuol.sp.challenge.ecommerce.common.ProdutoConstants.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Optional;
 
-import static com.compassuol.sp.challenge.ecommerce.common.ProdutoConstants.PRODUTO2;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 
 import static org.mockito.Mockito.*;

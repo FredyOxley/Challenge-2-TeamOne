@@ -5,6 +5,7 @@ import com.compassuol.sp.challenge.ecommerce.domain.pedido.entity.Pedido;
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.enums.MetodoDePagamento;
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.enums.StatusPedido;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.entity.Produto;
+import com.compassuol.sp.challenge.ecommerce.web.dto.EnderecoDto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -25,6 +26,12 @@ public class PedidoConstants {
             "SP",
             "São Paulo",
             "Avenida Paulista"
+    );
+
+    public static final EnderecoDto ENDERECO_DTO = new EnderecoDto(
+            10,
+            "2100",
+            "01310930"
     );
 
     public static final LocalDateTime TIME_NOW = LocalDateTime.now();

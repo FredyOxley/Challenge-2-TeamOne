@@ -12,10 +12,7 @@ import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.EntityNotF
 import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoRepository;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.service.ProdutoService;
 import com.compassuol.sp.challenge.ecommerce.web.client.ViaCepClient;
-import com.compassuol.sp.challenge.ecommerce.web.dto.EnderecoDto;
-import com.compassuol.sp.challenge.ecommerce.web.dto.PedidoCancelDto;
-import com.compassuol.sp.challenge.ecommerce.web.dto.PedidoCreateDto;
-import com.compassuol.sp.challenge.ecommerce.web.dto.ViaCepClientDto;
+import com.compassuol.sp.challenge.ecommerce.web.dto.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -23,10 +20,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
 
+import static com.compassuol.sp.challenge.ecommerce.common.PedidoConstants.ENDERECO;
+import static com.compassuol.sp.challenge.ecommerce.common.PedidoConstants.ENDERECO_DTO;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -42,6 +42,8 @@ public class PedidoServiceTest {
 
     @Mock
     private ModelMapper modelMapper;
+
+
 
     @Mock
     private EnderecoRepository enderecoRepository;
@@ -101,47 +103,63 @@ public class PedidoServiceTest {
     }
 
 
+    @Test
+    public void salvarPedidoWithValidDataReturnsSavedPedido() {
+        PedidoCreateDto pedidoCreateDto = new PedidoCreateDto();
+
+        pedidoCreateDto.setEndereco(ENDERECO_DTO);
+        pedidoCreateDto.setMetodoPagamento("PIX");
+        pedidoCreateDto.setProdutos(Collections.singletonList(new ItemPedidoDto()));
+
+        Produto produto = new Produto();
+        produto.setValor(BigDecimal.TEN);
+
+        Endereco endereco = new Endereco();
+
+        when(produtoService.buscarPorId(any())).thenReturn(produto);
+        when(enderecoRepository.save(any())).thenReturn(endereco);
+        when(pedidoRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        Pedido actualPedido = pedidoService.salvar(pedidoCreateDto);
+
+        assertNotNull(actualPedido);
+        assertEquals(MetodoDePagamento.PIX, actualPedido.getMetodoPagamento());
+        assertEquals(endereco, actualPedido.getEndereco());
+        assertEquals(StatusPedido.CONFIRMADO, actualPedido.getStatusPedido());
+        assertEquals(BigDecimal.ZERO, actualPedido.getDesconto());
+        assertEquals(BigDecimal.TEN, actualPedido.getValorSubTotal());
+        assertEquals(BigDecimal.TEN, actualPedido.getValorTotal());
+    }
+
 //    @Test
-//    public void salvar_WithValidData_ReturnsSavedPedido() {
+//    public void salvarPedidoWithPixPaymentCalculatesDiscount() {
 //        PedidoCreateDto pedidoCreateDto = new PedidoCreateDto();
-//        PedidoCreateDto.EnderecoDto enderecoDto = new PedidoCreateDto.EnderecoDto();
-//        enderecoDto.setCep("12345678");
-//        enderecoDto.setNumero(123);
-//        pedidoCreateDto.setEndereco(enderecoDto);
-//        pedidoCreateDto.setMetodoPagamento("CARTAO_CREDITO");
-//
-//        PedidoCreateDto.ItemPedidoDto itemPedidoDto = new PedidoCreateDto.ItemPedidoDto();
-//        itemPedidoDto.setIdProduto(1L);
-//        pedidoCreateDto.setProdutos(Collections.singletonList(itemPedidoDto));
-//
-//        ViaCepClientDto viaCepClientDto = new ViaCepClientDto();
-//        viaCepClientDto.setCep("12345678");
-//        viaCepClientDto.setLocalidade("Test City");
-//
-//        Endereco endereco = new Endereco();
-//        endereco.setCep("12345678");
-//        endereco.setNumeroEndereco(123);
-//        endereco.setCidade("Test City");
+//        pedidoCreateDto.setEndereco(ENDERECO_DTO);
+//        pedidoCreateDto.setMetodoPagamento("PIX");
+//        pedidoCreateDto.setProdutos(Collections.singletonList(new ItemPedidoDto()));
 //
 //        Produto produto = new Produto();
-//        produto.setId(1L);
+//        produto.setValor(BigDecimal.valueOf(100));
 //
-//        Pedido expectedPedido = new Pedido();
-//        expectedPedido.setEndereco(endereco);
-//        expectedPedido.setProdutos(Collections.singletonList(produto));
-//        expectedPedido.setMetodoPagamento(MetodoDePagamento.CARTAO_CREDITO);
-//        expectedPedido.setStatusPedido(StatusPedido.CONFIRMADO);
+//        Endereco endereco = new Endereco();
 //
-//        when(viaCepClient.findByCep(any())).thenReturn(viaCepClientDto);
-//        when(modelMapper.map(any(), any())).thenReturn(endereco);
-//        when(enderecoRepository.save(any())).thenReturn(endereco);
 //        when(produtoService.buscarPorId(any())).thenReturn(produto);
-//        when(pedidoRepository.save(any())).thenReturn(expectedPedido);
+//        when(enderecoRepository.save(any())).thenReturn(endereco);
+//        when(pedidoRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 //
 //        Pedido actualPedido = pedidoService.salvar(pedidoCreateDto);
 //
-//        assertEquals(expectedPedido, actualPedido);
+//        assertNotNull(actualPedido);
+//        assertEquals(MetodoDePagamento.PIX, actualPedido.getMetodoPagamento());
+//        assertEquals(endereco, actualPedido.getEndereco());
+//        assertEquals(StatusPedido.CONFIRMADO, actualPedido.getStatusPedido());
+//        assertEquals(BigDecimal.valueOf(5), actualPedido.getDesconto());
+//        assertEquals(BigDecimal.valueOf(100), actualPedido.getValorSubTotal());
+//        assertEquals(BigDecimal.valueOf(95), actualPedido.getValorTotal());
 //    }
+
+
+
     @Test
     public void salvar_WithInvalidData_ThrowsException() {
         PedidoCreateDto pedidoCreateDto = new PedidoCreateDto();

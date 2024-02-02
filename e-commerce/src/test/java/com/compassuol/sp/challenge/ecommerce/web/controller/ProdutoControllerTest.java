@@ -182,10 +182,10 @@ public class ProdutoControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(produtoCreateDto)))
                 .andExpect(status().isOk());
-//               .andExpect(jsonPath("$.id", Matchers.is(2)))
-//               .andExpect(jsonPath("$.nome", Matchers.is("Produto Atualizado")))
-//               .andExpect(jsonPath("$.descricao", Matchers.is("Descrição Atualizada")))
-//              .andExpect(jsonPath("$.valor", Matchers.is(200.0)));
+//             .andExpect(jsonPath("$.id", Matchers.is(2)))
+//             .andExpect(jsonPath("$.nome", Matchers.is("Produto Atualizado")))
+//              .andExpect(jsonPath("$.descricao", Matchers.is("Descrição Atualizada")))
+//           .andExpect(jsonPath("$.valor", Matchers.is(200.0)))
     }
 
     @Test

@@ -57,4 +57,6 @@ public class Pedido {
     @Column(name = "data_cancelamento")
     private LocalDateTime dataCancelamento;
 
+
+
 }
