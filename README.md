@@ -78,11 +78,69 @@ A aplicação deverá estar em execução e acessível em http://localhost:8080/
 Exibe a lista de produtos
 
 
+Resposta:
+```
+{
+"id": 1,
+"nome": "Nome produto",
+"descricao": "Descrição do produto",
+"valor": 10.5
+}
+```
 
+`GET /api/products/{id}`
 
+Recupera um produto específico por ID
 
+Resposta:
+```
+{
+  "id": 1,
+  "nome": "Nome do Produto",
+  "descricao": "Descrição do Produto",
+  "valor": 150.0
+}
+```
 
+`POST /api/products`
 
+Adiciona um novo produto
+
+Solicitação:
+```
+{
+  "nome": "Novo Nome do Produto",
+  "descricao": "Nova Descrição do Produto",
+  "valor": 150.0
+}
+```
+
+`DELETE /api/products/{id}`
+
+Remove um produto pelo ID
+
+Resposta:
+
+```
+{
+204 No Content
+}
+```
+
+`PUT /api/products/{id}`
+
+Atualiza informações de um produto específico por ID
+
+Resposta:
+
+```
+{
+    "id": 3,
+    "nome": "Novo Nome do Produto a",
+    "descricao": "Nova Descrição do Produto a",
+    "valor": 200.0
+}
+```
 
 
 
