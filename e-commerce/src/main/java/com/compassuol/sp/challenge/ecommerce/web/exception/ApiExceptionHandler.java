@@ -45,25 +45,6 @@ public class ApiExceptionHandler {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new ErrorMessage(request, HttpStatus.NOT_FOUND, ex.getMessage()));
     }
- 
-
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ErrorMessage> dataIntegrityViolationException(RuntimeException ex, HttpServletRequest request) {
-        log.error("Api Error - ", ex);
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, "Parâmetros informados estão inválidos"));
-    }
-
-    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<ErrorMessage> httpRequestMethodNotSupportedException(RuntimeException ex, HttpServletRequest request) {
-        log.error("Api Error - ", ex);
-        return ResponseEntity
-                .status(HttpStatus.METHOD_NOT_ALLOWED)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(new ErrorMessage(request, HttpStatus.METHOD_NOT_ALLOWED, ex.getMessage()));
-    }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ErrorMessage> methodArgumentTypeMismatchException(RuntimeException ex, HttpServletRequest request) {
@@ -74,14 +55,7 @@ public class ApiExceptionHandler {
                 .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, "Parâmetros informados estão inválidos"));
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorMessage> exception(Exception ex, HttpServletRequest request) {
-        log.error("Api Error - ", ex);
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(new ErrorMessage(request, HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno no servidor"));
-    }
+
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     private ResponseEntity<Object> handleBadRequest(EmptyResultDataAccessException exception) {
@@ -99,27 +73,6 @@ public class ApiExceptionHandler {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new ErrorMessage(request ,HttpStatus.CONFLICT, ex.getMessage()));
     }
-
-
-
-    @ControllerAdvice
-    public class GlobalExceptionHandler {
-        @ExceptionHandler(UnprocessableEntityException.class)
-        public ResponseEntity<Object> handleUnprocessableEntityException(UnprocessableEntityException ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
-        }
-    }
-
-    @ExceptionHandler(InvalidDataException.class)
-    public ResponseEntity<ErrorMessage> handleInvalidDataException(InvalidDataException ex, HttpServletRequest request) {
-        log.error("Api Error - ", ex);
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
-    }
-
-
 
 
 }
