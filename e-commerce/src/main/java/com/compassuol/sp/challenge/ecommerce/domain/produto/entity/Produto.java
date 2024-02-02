@@ -1,12 +1,9 @@
 package com.compassuol.sp.challenge.ecommerce.domain.produto.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
 
 @Entity
@@ -15,6 +12,7 @@ import java.util.Objects;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 @Table(name = "produtos")
 public class Produto {
 
@@ -35,19 +33,5 @@ public class Produto {
         this.nome = nome;
         this.descricao = descricao;
         this.valor = valor;
-    }
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Produto produto = (Produto) o;
-
-        return Objects.equals(id, produto.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
     }
 }

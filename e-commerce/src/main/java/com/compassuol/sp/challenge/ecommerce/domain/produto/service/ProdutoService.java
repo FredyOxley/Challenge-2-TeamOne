@@ -3,21 +3,17 @@ package com.compassuol.sp.challenge.ecommerce.domain.produto.service;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.entity.Produto;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.EntityNotFoundException;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.HandlerConflictException;
+import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.UnprocessableEntityException;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoProjection;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoRepository;
-import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.QueryBuilder;
 import com.compassuol.sp.challenge.ecommerce.web.dto.ProdutoCreateDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -29,8 +25,7 @@ public class ProdutoService {
     public Produto salvar(Produto produto) {
         try {
             return produtoRepository.save(produto);
-        }catch (DataIntegrityViolationException ex)
-        {
+        } catch (DataIntegrityViolationException ex) {
             throw new HandlerConflictException("Produto já cadastrado no sistema.");
         }
     }
@@ -49,17 +44,21 @@ public class ProdutoService {
 
     @Transactional
     public Produto editarProduto(Long id, ProdutoCreateDto produtoCreateDto) {
-        Produto produto = buscarPorId(id);
-        if (produto != null) {
+        try {
+            Produto produto = buscarPorId(id);
+            if (produto != null) {
+                produto.setNome(produtoCreateDto.getNome());
+                produto.setDescricao(produtoCreateDto.getDescricao());
+                produto.setValor(produtoCreateDto.getValor());
+                return produtoRepository.save(produto);
+            } else {
+                throw new EntityNotFoundException("Produto não encontrado com o ID: " + id);
+            }
+        } catch (UnprocessableEntityException ex) {
+            throw new UnprocessableEntityException("Campo invalido! Descrição deve conter 10 caracteres ou mais e o nome do produto não pode ser nulo ou vazio");
 
-            produto.setNome(produtoCreateDto.getNome());
-            produto.setDescricao(produtoCreateDto.getDescricao());
-            produto.setValor(produtoCreateDto.getValor());
-
-            return produtoRepository.save(produto);
-        } else {
-            throw new EntityNotFoundException("Produto não encontrado com o ID: " + id);
         }
+
     }
 
     @Transactional
@@ -67,9 +66,5 @@ public class ProdutoService {
         buscarPorId(id);
         produtoRepository.deleteById(id);
     }
-
-
-
-
 }
 
