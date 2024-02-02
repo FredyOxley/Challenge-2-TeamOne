@@ -7,12 +7,15 @@ import com.compassuol.sp.challenge.ecommerce.domain.pedido.enums.StatusPedido;
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.repository.EnderecoRepository;
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.repository.PedidoRepository;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.entity.Produto;
+import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.BadRequestException;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.EntityNotFoundException;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.service.ProdutoService;
 import com.compassuol.sp.challenge.ecommerce.web.client.ViaCepClient;
 import com.compassuol.sp.challenge.ecommerce.web.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -116,6 +119,22 @@ public class PedidoService {
         LocalDateTime limiteCancelar = pedido.getDataCriacao().plusDays(90);
         if (LocalDateTime.now().isAfter(limiteCancelar)) {
             throw new IllegalStateException("Não é possível cancelar um pedido que já passou de 90 dias");
+        }
+    }
+
+    public Page<PedidoResponseDto> buscarTodosPedidos(Pageable pageable, String status)
+    {
+        try {
+            Page<Pedido> pedidos;
+            if (status != null) {
+                pedidos = pedidoRepository.findByStatusPedido(StatusPedido.valueOf(status), pageable);
+            } else {
+                pedidos = pedidoRepository.findAll(pageable);
+            }
+            return pedidos.map(pedido -> modelMapper.map(pedido, PedidoResponseDto.class));
+
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Status inválido: " + status);
         }
     }
 }
