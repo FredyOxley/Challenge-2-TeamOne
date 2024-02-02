@@ -13,28 +13,28 @@ O projeto consiste em uma solução robusta desenvolvida em Spring Boot para ger
     <td>GitHub</td>
   </tr>
   <tr>
-    <td>E-mail</td>
+    <td>pedro.bastos.pb@compasso.com.br</td>
     <td>oPedr1nhoo</td>
   </tr>
    <tr>
-    <td>E-mail</td>
+    <td>raphael.araujo.pb@compasso.com.br</td>
     <td>raphael-araujo</td>
   </tr>
    <tr>
-    <td>E-mail</td>
+    <td>alex.spohr.pb@compasso.com.br</td>
     <td>AlexSpohr</td>
   </tr>
    <tr>
-    <td>E-mail</td>
+    <td>leandro.paupitz.pb@compasso.com.br</td>
     <td>lepaupitz</td>
   </tr>
    <tr>
-    <td>E-mail</td>
-    <td>FredyOxley</td>
+    <td>rafael.cazali.pb@compasso.com.br</td>
+    <td>CazaliU</td>
   </tr>
     <tr>
-    <td>E-mail</td>
-    <td>CazaliU</td>
+    <td>fredy.oxley.pb@compasso.com.br</td>
+    <td>FredyOxley</td>
   </tr>
 </table>
 
@@ -70,6 +70,13 @@ mvn spring-boot:run
 A aplicação deverá estar em execução e acessível em http://localhost:8080/
 
 -------------------------------------------------------------------------------------------------------
+
+### Endpoints API Produtos
+
+`GET /api/products`
+
+Exibe a lista de produtos
+
 
 
 
