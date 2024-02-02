@@ -81,10 +81,10 @@ Exibe a lista de produtos
 Resposta:
 ```
 {
-"id": 1,
-"nome": "Nome produto",
-"descricao": "Descrição do produto",
-"valor": 10.5
+  "id": 1,
+  "nome": "Nome produto",
+  "descricao": "Descrição do produto",
+  "valor": 10.5
 }
 ```
 
@@ -123,7 +123,7 @@ Resposta:
 
 ```
 {
-204 No Content
+  204 No Content
 }
 ```
 
@@ -196,22 +196,22 @@ Resposta:
 `POST /api/orders/{id}`
 ```
 {
-"produtos": [
+  "produtos": [
 {
-"idProduto": 1,
-"quantidade": 2
+  "idProduto": 1,
+  "quantidade": 2
 },
 {
-"idProduto": 2,
-"quantidade": 5
+  "idProduto": 2,
+  "quantidade": 5
 }
 ],
-"endereco": {
-"numero": 10,
-"complemento": "casa",
-"cep": "01310930"
+  "endereco": {
+  "numero": 10,
+  "complemento": "casa",
+  "cep": "01310930"
 },
-"metodoPagamento": "PIX"
+  "metodoPagamento": "PIX"
 }
 ```
 
