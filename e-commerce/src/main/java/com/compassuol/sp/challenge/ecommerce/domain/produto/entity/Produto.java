@@ -1,6 +1,5 @@
 package com.compassuol.sp.challenge.ecommerce.domain.produto.entity;
 
-import com.compassuol.sp.challenge.ecommerce.domain.pedido.entity.Pedido;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,9 +15,6 @@ import java.math.BigDecimal;
 @EqualsAndHashCode
 @Table(name = "produtos")
 public class Produto {
-
-
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -2,11 +2,8 @@ package com.compassuol.sp.challenge.ecommerce.domain;
 
 import com.compassuol.sp.challenge.ecommerce.common.ProdutoConstants;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.entity.Produto;
-
-import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoProjection;
-
 import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.EntityNotFoundException;
-
+import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoProjection;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoRepository;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.service.ProdutoService;
 import com.compassuol.sp.challenge.ecommerce.web.dto.ProdutoCreateDto;
@@ -19,27 +16,19 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
-
-import static com.compassuol.sp.challenge.ecommerce.common.ProdutoConstants.PRODUTO;
-import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Optional;
 
 import static com.compassuol.sp.challenge.ecommerce.common.ProdutoConstants.PRODUTO2;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-
 import static org.mockito.Mockito.*;
-
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -180,7 +169,7 @@ public class ProdutoServiceTest {
 
     @Test
     public void buscarTodos_RetornarListaDeProdutosVaziaComSucesso() {
-        List<ProdutoProjection> listaDeProdutos = Arrays.asList();
+        List<ProdutoProjection> listaDeProdutos = List.of();
 
         Page<ProdutoProjection> page = new PageImpl<>(listaDeProdutos);
         when(produtoRepository.findAllPageable(any())).thenReturn(page);
@@ -260,8 +249,4 @@ public class ProdutoServiceTest {
 
         verify(produtoRepository, never()).save(any(Produto.class));
     }
-
-
-
-
 }

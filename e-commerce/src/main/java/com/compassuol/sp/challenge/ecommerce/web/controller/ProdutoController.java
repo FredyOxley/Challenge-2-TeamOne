@@ -4,9 +4,9 @@ import com.compassuol.sp.challenge.ecommerce.domain.produto.entity.Produto;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoProjection;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.service.ProdutoService;
 import com.compassuol.sp.challenge.ecommerce.web.dto.PageableDto;
-import com.compassuol.sp.challenge.ecommerce.web.dto.mapper.PageableMapper;
 import com.compassuol.sp.challenge.ecommerce.web.dto.ProdutoCreateDto;
 import com.compassuol.sp.challenge.ecommerce.web.dto.ProdutoResponseDto;
+import com.compassuol.sp.challenge.ecommerce.web.dto.mapper.PageableMapper;
 import com.compassuol.sp.challenge.ecommerce.web.exception.ErrorMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -34,7 +34,7 @@ import static io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY;
 @RequestMapping("/api/products")
 public class ProdutoController {
 
-    private final ModelMapper modelMapper; 
+    private final ModelMapper modelMapper;
     private final ProdutoService produtoService;
 
     @Operation(summary = "Criar um novo produto",
@@ -68,12 +68,12 @@ public class ProdutoController {
             }
     )
     @GetMapping("/{id}")
-    public ResponseEntity<Produto> buscarProduto(@PathVariable Long id) {
+    public ResponseEntity<ProdutoResponseDto> buscarProduto(@PathVariable Long id) {
         Produto produto = produtoService.buscarPorId(id);
-        return ResponseEntity.ok(produto);
+        return ResponseEntity.ok(modelMapper.map(produto, ProdutoResponseDto.class));
     }
 
-    @Operation(summary = "Deletar um produto por ID" ,
+    @Operation(summary = "Deletar um produto por ID",
             description = "Recurso para deletar um produto do sistema por ID",
             security = @SecurityRequirement(name = "security"),
             responses = {
@@ -114,8 +114,8 @@ public class ProdutoController {
                     )
             })
     @GetMapping
-    public ResponseEntity<PageableDto> getAll(@Parameter(hidden = true)
-                                              @PageableDefault(size = 5, sort = {"nome"}) Pageable pageable) {
+    public ResponseEntity<PageableDto> buscarTodosOsProdutos(@Parameter(hidden = true)
+                                                             @PageableDefault(size = 5, sort = {"nome"}) Pageable pageable) {
         Page<ProdutoProjection> produtos = produtoService.buscarTodos(pageable);
         return ResponseEntity.ok(PageableMapper.toDto(produtos));
     }
@@ -134,7 +134,7 @@ public class ProdutoController {
                             content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
             })
     @PutMapping("/{id}")
-    public ResponseEntity<ProdutoResponseDto> atualizarProduto(@PathVariable Long id ,@Valid @RequestBody ProdutoCreateDto produtoCreateDTO) {
+    public ResponseEntity<ProdutoResponseDto> atualizarProduto(@PathVariable Long id, @Valid @RequestBody ProdutoCreateDto produtoCreateDTO) {
         Produto produto = produtoService.editarProduto(id, produtoCreateDTO);
         return ResponseEntity.ok(modelMapper.map(produto, ProdutoResponseDto.class));
     }
