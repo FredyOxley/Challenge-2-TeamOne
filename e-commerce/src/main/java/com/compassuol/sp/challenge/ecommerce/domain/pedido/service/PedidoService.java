@@ -91,6 +91,7 @@ public class PedidoService {
     @Transactional
     public Pedido atualizarStatus(Long id) {
         Pedido pedido = buscarPorId(id);
+
         if (pedido.getStatusPedido() == StatusPedido.CONFIRMADO) {
             pedido.setStatusPedido(StatusPedido.ENVIADO);
             return pedidoRepository.save(pedido);

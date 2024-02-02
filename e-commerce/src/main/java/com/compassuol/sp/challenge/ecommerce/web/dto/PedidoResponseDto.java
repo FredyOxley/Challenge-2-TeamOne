@@ -1,5 +1,6 @@
 package com.compassuol.sp.challenge.ecommerce.web.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PedidoResponseDto {
+
+    @NotNull
     private Long id;
     private List<ProdutoPedidoDto> produtos;
     private EnderecoResponseDto endereco;
