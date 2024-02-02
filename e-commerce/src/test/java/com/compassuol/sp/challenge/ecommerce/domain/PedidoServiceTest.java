@@ -8,6 +8,7 @@ import com.compassuol.sp.challenge.ecommerce.domain.pedido.repository.EnderecoRe
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.repository.PedidoRepository;
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.service.PedidoService;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.entity.Produto;
+import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.BadRequestException;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.EntityNotFoundException;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoRepository;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.service.ProdutoService;
@@ -19,6 +20,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -310,5 +314,26 @@ public class PedidoServiceTest {
         assertDoesNotThrow(() -> pedidoService.validarPedidoParaCancelar(pedido));
     }
 
+    @Test
+    void buscarTodosPedidos_RetornarListaDePedidosComSucesso() {
+
+        Page<Pedido> paginaPedidos = new PageImpl<>(Collections.singletonList(new Pedido()));
+        when(pedidoRepository.findAll(any(Pageable.class))).thenReturn(paginaPedidos);
+
+        Page<PedidoResponseDto> resultado = pedidoService.buscarTodosPedidos(Pageable.unpaged(), null);
+
+        assertEquals(paginaPedidos.getTotalElements(), resultado.getTotalElements());
+    }
+
+    @Test
+    void buscarTodosPedidos_StatusInvalido_DeveLancarBadRequestException() {
+        String statusInvalido = "STATUS_INVALIDO";
+        BadRequestException excecao = org.junit.jupiter.api.Assertions.assertThrows(
+                BadRequestException.class,
+                () -> pedidoService.buscarTodosPedidos(Pageable.unpaged(), statusInvalido)
+        );
+
+        assertEquals("Status inválido: " + statusInvalido, excecao.getMessage());
+    }
 
 }
