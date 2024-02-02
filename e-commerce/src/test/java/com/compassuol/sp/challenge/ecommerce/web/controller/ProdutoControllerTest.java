@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
@@ -31,7 +30,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -39,10 +37,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(ProdutoController.class)
 public class ProdutoControllerTest {
-
-
-
-
     @Autowired
     private MockMvc mockMvc;
 
@@ -50,17 +44,16 @@ public class ProdutoControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private ProdutoService produtoService;
+    private ModelMapper modelMapper;
 
     @MockBean
-    private ModelMapper  modelMapper;
+    private ProdutoService produtoService;
 
     @MockBean
     private ProdutoRepository produtoRepository;
 
-
     @Test
-    public void CriarProdutot_ComDadosValidos_RetornaOk() throws Exception {
+    public void CriarProduto_ComDadosValidos_RetornaOk() throws Exception {
         when(produtoService.salvar(PRODUTO2)).thenReturn(PRODUTO2);
 
         mockMvc
@@ -69,8 +62,6 @@ public class ProdutoControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
     }
-
-
 
     @Test
     public void CriarProduto_ComDadosInvalidos_RetornaBadRequest() throws Exception {
@@ -100,7 +91,6 @@ public class ProdutoControllerTest {
                 .andExpect(status().isConflict());
     }
 
-
     @Test
     public void buscarProduto_PorIdExistente_RetornarProduto() throws Exception {
         when(produtoService.buscarPorId(2L)).thenReturn(PRODUTO2);
@@ -127,6 +117,7 @@ public class ProdutoControllerTest {
         mockMvc.perform(delete("/api/products/2"))
                 .andExpect(status().isNoContent());
     }
+
     @Test
     public void deletarProduto_PorIdInexistente_RetornaNotFound() throws Exception {
         final Long produtoId = 1L;
@@ -136,7 +127,6 @@ public class ProdutoControllerTest {
         mockMvc.perform(delete("/api/products/" + produtoId))
                 .andExpect(status().isNotFound());
     }
-
 
     @Test
     public void getAll_WithDefaultPageable_ReturnsPageableDto() throws Exception {
@@ -210,17 +200,13 @@ public class ProdutoControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-  @Test
-   public void atualizarProduto_WithInvalidData_ReturnsUnprocessableEntity() throws Exception {
-       ProdutoCreateDto produtoCreateDto = new ProdutoCreateDto("", "", BigDecimal.valueOf(-1));
+    @Test
+    public void atualizarProduto_WithInvalidData_ReturnsUnprocessableEntity() throws Exception {
+        ProdutoCreateDto produtoCreateDto = new ProdutoCreateDto("", "", BigDecimal.valueOf(-1));
 
         mockMvc.perform(put("/api/products/1")
-                      .contentType(MediaType.APPLICATION_JSON)
-                       .content(objectMapper.writeValueAsString(produtoCreateDto)))
-              .andExpect(status().isUnprocessableEntity());
-   }
-
-
-
-
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(produtoCreateDto)))
+                .andExpect(status().isUnprocessableEntity());
+    }
 }
