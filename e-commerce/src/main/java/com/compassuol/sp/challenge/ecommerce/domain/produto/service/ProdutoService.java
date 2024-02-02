@@ -25,8 +25,7 @@ public class ProdutoService {
     public Produto salvar(Produto produto) {
         try {
             return produtoRepository.save(produto);
-        }catch (DataIntegrityViolationException ex)
-        {
+        } catch (DataIntegrityViolationException ex) {
             throw new HandlerConflictException("Produto já cadastrado no sistema.");
         }
     }
@@ -45,20 +44,20 @@ public class ProdutoService {
 
     @Transactional
     public Produto editarProduto(Long id, ProdutoCreateDto produtoCreateDto) {
-try{
-        Produto produto = buscarPorId(id);
-        if (produto != null) {
-            produto.setNome(produtoCreateDto.getNome());
-            produto.setDescricao(produtoCreateDto.getDescricao());
-            produto.setValor(produtoCreateDto.getValor());
-            return produtoRepository.save(produto);
-        } else {
-            throw new EntityNotFoundException("Produto não encontrado com o ID: " + id);
-        }
-    }catch(UnprocessableEntityException ex) {
-    throw new UnprocessableEntityException("Campo invalido! Descrição deve conter 10 caracteres ou mais e o nome do produto não pode ser nulo ou vazio");
+        try {
+            Produto produto = buscarPorId(id);
+            if (produto != null) {
+                produto.setNome(produtoCreateDto.getNome());
+                produto.setDescricao(produtoCreateDto.getDescricao());
+                produto.setValor(produtoCreateDto.getValor());
+                return produtoRepository.save(produto);
+            } else {
+                throw new EntityNotFoundException("Produto não encontrado com o ID: " + id);
+            }
+        } catch (UnprocessableEntityException ex) {
+            throw new UnprocessableEntityException("Campo invalido! Descrição deve conter 10 caracteres ou mais e o nome do produto não pode ser nulo ou vazio");
 
-}
+        }
 
     }
 
@@ -67,9 +66,5 @@ try{
         buscarPorId(id);
         produtoRepository.deleteById(id);
     }
-
-
-
-
 }
 
