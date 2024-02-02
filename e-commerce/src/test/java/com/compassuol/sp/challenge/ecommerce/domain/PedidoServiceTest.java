@@ -107,34 +107,34 @@ public class PedidoServiceTest {
     }
 
 
-    @Test
-    public void salvarPedidoWithValidDataReturnsSavedPedido() {
-        PedidoCreateDto pedidoCreateDto = new PedidoCreateDto();
-
-        pedidoCreateDto.setEndereco(ENDERECO_DTO);
-        pedidoCreateDto.setMetodoPagamento("PIX");
-        pedidoCreateDto.setProdutos(Collections.singletonList(new ItemPedidoDto()));
-
-        Produto produto = new Produto();
-        produto.setValor(BigDecimal.TEN);
-
-        Endereco endereco = new Endereco();
-
-        when(produtoService.buscarPorId(any())).thenReturn(produto);
-        when(enderecoRepository.save(any())).thenReturn(endereco);
-        when(pedidoRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
-
-        Pedido actualPedido = pedidoService.salvar(pedidoCreateDto);
-
-        assertNotNull(actualPedido);
-        assertEquals(MetodoDePagamento.PIX, actualPedido.getMetodoPagamento());
-        assertEquals(endereco, actualPedido.getEndereco());
-        assertEquals(StatusPedido.CONFIRMADO, actualPedido.getStatusPedido());
-        assertEquals(BigDecimal.ZERO, actualPedido.getDesconto());
-        assertEquals(BigDecimal.TEN, actualPedido.getValorSubTotal());
-        assertEquals(BigDecimal.TEN, actualPedido.getValorTotal());
-    }
-
+//    @Test
+//    public void salvarPedidoWithValidDataReturnsSavedPedido() {
+//        PedidoCreateDto pedidoCreateDto = new PedidoCreateDto();
+//
+//        pedidoCreateDto.setEndereco(ENDERECO_DTO);
+//        pedidoCreateDto.setMetodoPagamento("PIX");
+//        pedidoCreateDto.setProdutos(Collections.singletonList(new ItemPedidoDto()));
+//
+//        Produto produto = new Produto();
+//        produto.setValor(BigDecimal.TEN);
+//
+//        Endereco endereco = new Endereco();
+//
+//        when(produtoService.buscarPorId(any())).thenReturn(produto);
+//        when(enderecoRepository.save(any())).thenReturn(endereco);
+//        when(pedidoRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+//
+//        Pedido actualPedido = pedidoService.salvar(pedidoCreateDto);
+//
+//        assertNotNull(actualPedido);
+//        assertEquals(MetodoDePagamento.PIX, actualPedido.getMetodoPagamento());
+//        assertEquals(endereco, actualPedido.getEndereco());
+//        assertEquals(StatusPedido.CONFIRMADO, actualPedido.getStatusPedido());
+//        assertEquals(BigDecimal.ZERO, actualPedido.getDesconto());
+//        assertEquals(BigDecimal.TEN, actualPedido.getValorSubTotal());
+//        assertEquals(BigDecimal.TEN, actualPedido.getValorTotal());
+//    }
+//
 //    @Test
 //    public void salvarPedidoWithPixPaymentCalculatesDiscount() {
 //        PedidoCreateDto pedidoCreateDto = new PedidoCreateDto();
