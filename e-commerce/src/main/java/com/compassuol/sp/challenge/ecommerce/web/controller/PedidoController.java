@@ -47,8 +47,6 @@ public class PedidoController {
     })
     @PostMapping
     public ResponseEntity<PedidoResponseDto> criar(@Valid @RequestBody PedidoCreateDto pedidoDto) {
-        //PASSAR O MAPEAMENTO PARA O SERVICE E RETORNAR DTO
-
         Pedido pedidoCriado = pedidoService.salvar(pedidoDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.map(pedidoCriado, PedidoResponseDto.class));

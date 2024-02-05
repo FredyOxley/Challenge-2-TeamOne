@@ -12,12 +12,4 @@ public class PedidoCreateDto {
     private List<ItemPedidoDto> produtos;
     private EnderecoDto endereco;
     private String metodoPagamento;
-
-
-
-
-
-    private Double valorTotal;
-    private Double valorSubTotal;
-    private Double desconto;
 }
