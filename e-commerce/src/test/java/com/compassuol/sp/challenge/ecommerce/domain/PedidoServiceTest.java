@@ -4,14 +4,16 @@ import com.compassuol.sp.challenge.ecommerce.domain.pedido.entity.Endereco;
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.entity.Pedido;
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.enums.StatusPedido;
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.repository.EnderecoRepository;
+import com.compassuol.sp.challenge.ecommerce.domain.pedido.repository.PedidoProjection;
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.repository.PedidoRepository;
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.service.PedidoService;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.BadRequestException;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.EntityNotFoundException;
-import com.compassuol.sp.challenge.ecommerce.domain.produto.repository.ProdutoRepository;
-import com.compassuol.sp.challenge.ecommerce.domain.produto.service.ProdutoService;
 import com.compassuol.sp.challenge.ecommerce.web.client.ViaCepClient;
-import com.compassuol.sp.challenge.ecommerce.web.dto.*;
+import com.compassuol.sp.challenge.ecommerce.web.dto.EnderecoDto;
+import com.compassuol.sp.challenge.ecommerce.web.dto.PedidoCancelDto;
+import com.compassuol.sp.challenge.ecommerce.web.dto.PedidoCreateDto;
+import com.compassuol.sp.challenge.ecommerce.web.dto.ViaCepClientDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -23,7 +25,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -46,14 +49,10 @@ public class PedidoServiceTest {
     private EnderecoRepository enderecoRepository;
 
     @Mock
-    private ProdutoService produtoService;
-
-    @Mock
-    ProdutoRepository produtoRepository;
-
-    @Mock
     PedidoRepository pedidoRepository;
 
+    @Mock
+    PedidoProjection pedidoProjection;
 
     @BeforeEach
     public void setup() {
@@ -112,7 +111,6 @@ public class PedidoServiceTest {
         assertThrows(RuntimeException.class, () -> pedidoService.salvar(pedidoCreateDto));
     }
 
-
     @Test
     public void buscarPorId_WithExistingId_ReturnsPedido() {
         Long id = 1L;
@@ -162,7 +160,6 @@ public class PedidoServiceTest {
         assertThrows(IllegalStateException.class, () -> pedidoService.atualizarStatus(id));
     }
 
-
     @Test
     public void cancelarPedido_WithNonExistingId_ThrowsException() {
         Long id = 1L;
@@ -203,7 +200,6 @@ public class PedidoServiceTest {
         assertThrows(IllegalStateException.class, () -> pedidoService.cancelarPedido(id, pedidoCancelDto));
     }
 
-
     @Test
     public void validarPedidoParaCancelar_WithSentStatus_ThrowsException() {
         Pedido pedido = new Pedido();
@@ -232,12 +228,14 @@ public class PedidoServiceTest {
 
     @Test
     void buscarTodosPedidos_RetornarListaDePedidosComSucesso() {
+        List<PedidoProjection> listaDePedidos = Arrays.asList(pedidoProjection, pedidoProjection, pedidoProjection);
 
-        Page<Pedido> paginaPedidos = new PageImpl<>(Collections.singletonList(new Pedido()));
-        when(pedidoRepository.findAll(any(Pageable.class))).thenReturn(paginaPedidos);
+        Page<PedidoProjection> paginaPedidos = new PageImpl<>(listaDePedidos);
+        when(pedidoRepository.findAllPageable(any(Pageable.class))).thenReturn(paginaPedidos);
 
-        Page<PedidoResponseDto> resultado = pedidoService.buscarTodosPedidos(Pageable.unpaged(), null);
+        Page<PedidoProjection> resultado = pedidoService.buscarTodosPedidos(Pageable.unpaged(), null);
 
+        assertNotNull(resultado);
         assertEquals(paginaPedidos.getTotalElements(), resultado.getTotalElements());
     }
 

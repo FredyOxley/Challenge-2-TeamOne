@@ -9,9 +9,9 @@ import java.util.List;
 
 @Getter
 @Setter
-public class PageableDto {
+public class PageablePedidoDto {
 
-    private List<ProdutoResponseDto> content = new ArrayList<>();
+    private List<PedidoResponseDto> content = new ArrayList<>();
     private boolean first;
     private boolean last;
     @JsonProperty("page")
@@ -21,6 +21,4 @@ public class PageableDto {
     private int numberOfElements;
     private int totalPages;
     private int totalElements;
-
-
 }

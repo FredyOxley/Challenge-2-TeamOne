@@ -7,6 +7,7 @@ import com.compassuol.sp.challenge.ecommerce.domain.pedido.enums.MetodoDePagamen
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.enums.StatusPedido;
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.repository.EnderecoRepository;
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.repository.ItemPedidoRepository;
+import com.compassuol.sp.challenge.ecommerce.domain.pedido.repository.PedidoProjection;
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.repository.PedidoRepository;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.entity.Produto;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.BadRequestException;
@@ -125,15 +126,12 @@ public class PedidoService {
         }
     }
 
-    public Page<PedidoResponseDto> buscarTodosPedidos(Pageable pageable, String status) {
+    public Page<PedidoProjection> buscarTodosPedidos(Pageable pageable, String status) {
         try {
-            Page<Pedido> pedidos;
             if (status != null) {
-                pedidos = pedidoRepository.findByStatusPedido(StatusPedido.valueOf(status), pageable);
-            } else {
-                pedidos = pedidoRepository.findAll(pageable);
+                return pedidoRepository.findByStatusPedido(StatusPedido.valueOf(status), pageable);
             }
-            return pedidos.map(pedido -> modelMapper.map(pedido, PedidoResponseDto.class));
+            return pedidoRepository.findAllPageable(pageable);
 
         } catch (IllegalArgumentException e) {
             throw new BadRequestException("Status inválido: " + status);
