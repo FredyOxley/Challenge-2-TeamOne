@@ -23,9 +23,11 @@ public class PedidoRepositoryTest {
     private TestEntityManager testEntityManager;
 
     @Test
-    public void buscarProduto_PorIdExistente_RetornarProduto() {
+    public void buscarPedido_PorIdExistente_RetornarPedido() {
         testEntityManager.persist(PRODUTO);
         testEntityManager.persist(PRODUTO2);
+        testEntityManager.persist(ITEM_PEDIDO);
+        testEntityManager.persist(ITEM_PEDIDO2);
         testEntityManager.persist(ENDERECO);
         Pedido pedido = testEntityManager.persistFlushFind(PEDIDO);
         Optional<Pedido> pedidoOpt = pedidoRepository.findById(pedido.getId());

@@ -1,12 +1,13 @@
 package com.compassuol.sp.challenge.ecommerce.web.controller;
 
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.entity.Pedido;
+import com.compassuol.sp.challenge.ecommerce.domain.pedido.repository.PedidoProjection;
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.service.PedidoService;
-import com.compassuol.sp.challenge.ecommerce.web.dto.PageableDto;
+import com.compassuol.sp.challenge.ecommerce.web.dto.PageablePedidoDto;
 import com.compassuol.sp.challenge.ecommerce.web.dto.PedidoCancelDto;
 import com.compassuol.sp.challenge.ecommerce.web.dto.PedidoCreateDto;
 import com.compassuol.sp.challenge.ecommerce.web.dto.PedidoResponseDto;
-import com.compassuol.sp.challenge.ecommerce.web.dto.mapper.PageableMapper;
+import com.compassuol.sp.challenge.ecommerce.web.dto.mapper.PageablePedidoMapper;
 import com.compassuol.sp.challenge.ecommerce.web.exception.ErrorMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -47,8 +48,6 @@ public class PedidoController {
     })
     @PostMapping
     public ResponseEntity<PedidoResponseDto> criar(@Valid @RequestBody PedidoCreateDto pedidoDto) {
-        //PASSAR O MAPEAMENTO PARA O SERVICE E RETORNAR DTO
-
         Pedido pedidoCriado = pedidoService.salvar(pedidoDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.map(pedidoCriado, PedidoResponseDto.class));
@@ -99,11 +98,9 @@ public class PedidoController {
                             content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class)))
             })
     @PostMapping("/{id}/cancel")
-    public ResponseEntity<Pedido> cancelarPedido(@PathVariable Long id, @RequestBody PedidoCancelDto pedidoCancelDto) {
-
+    public ResponseEntity<PedidoCancelDto> cancelarPedido(@PathVariable Long id, @RequestBody PedidoCancelDto pedidoCancelDto) {
         Pedido pedidoCancelado = pedidoService.cancelarPedido(id, pedidoCancelDto);
-
-        return ResponseEntity.ok(pedidoCancelado);
+        return ResponseEntity.ok(mapper.map(pedidoCancelado, PedidoCancelDto.class));
     }
 
     @Operation(summary = "Recuperar lista de pedidos",
@@ -126,20 +123,21 @@ public class PedidoController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Pedidos recuperados com sucesso",
                             content = @Content(mediaType = "application/json;charset=UTF-8",
-                                    schema = @Schema(implementation = PageableDto.class))
+                                    schema = @Schema(implementation = PageablePedidoDto.class))
                     ),
                     @ApiResponse(responseCode = "404", description = "Pedidos não encontrados",
                             content = @Content(mediaType = "application/json;charset=UTF-8",
-                                    schema = @Schema(implementation = PageableDto.class))
+                                    schema = @Schema(implementation = PageablePedidoDto.class))
                     )
             })
+
     @GetMapping
-    public ResponseEntity<PageableDto> listarTodosPedidos(
+    public ResponseEntity<PageablePedidoDto> listarTodosPedidos(
             @PageableDefault(size = 5, sort = {"dataCriacao"}, direction = Sort.Direction.DESC) Pageable pageable,
             @RequestParam(name = "status", required = false) String status) {
 
-        Page<PedidoResponseDto> pedidos = pedidoService.buscarTodosPedidos(pageable, status);
+        Page<PedidoProjection> pedidos = pedidoService.buscarTodosPedidos(pageable, status);
 
-        return ResponseEntity.ok(PageableMapper.toDto(pedidos));
+        return ResponseEntity.ok(PageablePedidoMapper.toDto(pedidos));
     }
 }

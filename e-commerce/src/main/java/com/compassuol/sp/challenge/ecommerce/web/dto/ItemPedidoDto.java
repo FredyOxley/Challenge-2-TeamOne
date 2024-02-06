@@ -3,9 +3,9 @@ package com.compassuol.sp.challenge.ecommerce.web.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter //separar
+@Getter
 @Setter
-public  class ItemPedidoDto {
+public class ItemPedidoDto {
     private Long idProduto;
-    private int produtoQuantidade;
+    private Integer quantidade;
 }

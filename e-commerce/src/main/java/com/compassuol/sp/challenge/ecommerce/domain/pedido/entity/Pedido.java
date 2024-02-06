@@ -3,7 +3,6 @@ package com.compassuol.sp.challenge.ecommerce.domain.pedido.entity;
 
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.enums.MetodoDePagamento;
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.enums.StatusPedido;
-import com.compassuol.sp.challenge.ecommerce.domain.produto.entity.Produto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,7 +25,7 @@ public class Pedido {
     private Long id;
 
     @ManyToMany
-    private List<Produto> produtos;
+    private List<ItemPedido> produtos;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "metodo_pagamento")

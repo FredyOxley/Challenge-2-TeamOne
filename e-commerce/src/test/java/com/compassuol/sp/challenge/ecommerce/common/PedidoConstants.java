@@ -1,6 +1,7 @@
 package com.compassuol.sp.challenge.ecommerce.common;
 
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.entity.Endereco;
+import com.compassuol.sp.challenge.ecommerce.domain.pedido.entity.ItemPedido;
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.entity.Pedido;
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.enums.MetodoDePagamento;
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.enums.StatusPedido;
@@ -15,7 +16,10 @@ public class PedidoConstants {
     public static final Produto PRODUTO = new Produto(null, "Produto 1", "Descrição do produto 1", BigDecimal.TEN);
     public static final Produto PRODUTO2 = new Produto(null, "Produto 2", "Descrição do Produto 2", BigDecimal.TEN);
 
-    public static final List<Produto> PRODUTO_LIST = Arrays.asList(PRODUTO, PRODUTO2);
+    public static final ItemPedido ITEM_PEDIDO = new ItemPedido(null, PRODUTO, 3);
+    public static final ItemPedido ITEM_PEDIDO2 = new ItemPedido(null, PRODUTO2, 5);
+
+    public static final List<ItemPedido> PRODUTO_LIST = Arrays.asList(ITEM_PEDIDO, ITEM_PEDIDO2);
 
     public static final Endereco ENDERECO = new Endereco(
             null,

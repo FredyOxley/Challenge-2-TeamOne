@@ -1,10 +1,13 @@
 package com.compassuol.sp.challenge.ecommerce.domain.pedido.service;
 
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.entity.Endereco;
+import com.compassuol.sp.challenge.ecommerce.domain.pedido.entity.ItemPedido;
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.entity.Pedido;
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.enums.MetodoDePagamento;
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.enums.StatusPedido;
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.repository.EnderecoRepository;
+import com.compassuol.sp.challenge.ecommerce.domain.pedido.repository.ItemPedidoRepository;
+import com.compassuol.sp.challenge.ecommerce.domain.pedido.repository.PedidoProjection;
 import com.compassuol.sp.challenge.ecommerce.domain.pedido.repository.PedidoRepository;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.entity.Produto;
 import com.compassuol.sp.challenge.ecommerce.domain.produto.exception.BadRequestException;
@@ -35,6 +38,7 @@ public class PedidoService {
     private final ModelMapper modelMapper;
     private final PedidoRepository pedidoRepository;
     private final EnderecoRepository enderecoRepository;
+    private final ItemPedidoRepository itemPedidoRepository;
 
     public Pedido salvar(PedidoCreateDto pedidoCreateDto) {
         Endereco endereco = buscarEnderecoPorCep(pedidoCreateDto.getEndereco());
@@ -42,13 +46,16 @@ public class PedidoService {
         Pedido pedidoParaCriar = new Pedido();
         pedidoParaCriar.setMetodoPagamento(MetodoDePagamento.valueOf(pedidoCreateDto.getMetodoPagamento()));
         pedidoParaCriar.setEndereco(endereco);
-        List<Produto> produtos = new ArrayList<>();
+        List<ItemPedido> produtos = new ArrayList<>();
         BigDecimal totalValorProduto = BigDecimal.ZERO;
 
         for (ItemPedidoDto item : pedidoCreateDto.getProdutos()) {
             Produto produtoId = produtoService.buscarPorId(item.getIdProduto());
-            produtos.add(produtoId);
-            pedidoParaCriar.setValorSubTotal(produtoId.getValor().multiply(BigDecimal.valueOf(item.getProdutoQuantidade())));
+            ItemPedido ItemDoPedido = new ItemPedido(produtoId, item.getQuantidade());
+            itemPedidoRepository.save(ItemDoPedido);
+            produtos.add(ItemDoPedido);
+
+            pedidoParaCriar.setValorSubTotal(produtoId.getValor().multiply(BigDecimal.valueOf(item.getQuantidade())));
             totalValorProduto = totalValorProduto.add(pedidoParaCriar.getValorSubTotal());
         }
 
@@ -57,18 +64,15 @@ public class PedidoService {
         pedidoParaCriar.setStatusPedido(StatusPedido.CONFIRMADO);
         pedidoParaCriar.setDataCriacao(LocalDateTime.parse(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ISO_DATE_TIME)));
 
-
         if (pedidoParaCriar.getMetodoPagamento() != MetodoDePagamento.PIX) {
             pedidoParaCriar.setDesconto(BigDecimal.valueOf(0));
             pedidoParaCriar.setValorTotal(pedidoParaCriar.getValorSubTotal());
-            return pedidoRepository.save(pedidoParaCriar);
         } else {
             pedidoParaCriar.setDesconto(pedidoParaCriar.getValorSubTotal().multiply(BigDecimal.valueOf(0.05)));
             pedidoParaCriar.setValorTotal(pedidoParaCriar.getValorSubTotal().subtract(pedidoParaCriar.getDesconto()));
-            return pedidoRepository.save(pedidoParaCriar);
         }
+        return pedidoRepository.save(pedidoParaCriar);
     }
-
 
     public Endereco buscarEnderecoPorCep(EnderecoDto enderecoDto) {
         ViaCepClientDto viaCepClientDto = viaCepClient.findByCep(enderecoDto.getCep());
@@ -122,16 +126,12 @@ public class PedidoService {
         }
     }
 
-    public Page<PedidoResponseDto> buscarTodosPedidos(Pageable pageable, String status)
-    {
+    public Page<PedidoProjection> buscarTodosPedidos(Pageable pageable, String status) {
         try {
-            Page<Pedido> pedidos;
             if (status != null) {
-                pedidos = pedidoRepository.findByStatusPedido(StatusPedido.valueOf(status), pageable);
-            } else {
-                pedidos = pedidoRepository.findAll(pageable);
+                return pedidoRepository.findByStatusPedido(StatusPedido.valueOf(status), pageable);
             }
-            return pedidos.map(pedido -> modelMapper.map(pedido, PedidoResponseDto.class));
+            return pedidoRepository.findAllPageable(pageable);
 
         } catch (IllegalArgumentException e) {
             throw new BadRequestException("Status inválido: " + status);
