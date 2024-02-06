@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 public class PageableDto {
 
-    private List<ProdutoResponseDto> content = new ArrayList<>();
+    private List<PedidoResponseDto> content = new ArrayList<>();
     private boolean first;
     private boolean last;
     @JsonProperty("page")
