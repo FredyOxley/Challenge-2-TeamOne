@@ -97,11 +97,9 @@ public class PedidoController {
                             content = @Content(mediaType = " application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class)))
             })
     @PostMapping("/{id}/cancel")
-    public ResponseEntity<Pedido> cancelarPedido(@PathVariable Long id, @RequestBody PedidoCancelDto pedidoCancelDto) {
-
+    public ResponseEntity<PedidoCancelDto> cancelarPedido(@PathVariable Long id, @RequestBody PedidoCancelDto pedidoCancelDto) {
         Pedido pedidoCancelado = pedidoService.cancelarPedido(id, pedidoCancelDto);
-
-        return ResponseEntity.ok(pedidoCancelado);
+        return ResponseEntity.ok(mapper.map(pedidoCancelado, PedidoCancelDto.class));
     }
 
     @Operation(summary = "Recuperar lista de pedidos",
